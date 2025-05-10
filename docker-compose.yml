@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/mental_health
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - FIRST_SUPERUSER_EMAIL=${FIRST_SUPERUSER_EMAIL:-admin@example.com}
+      - FIRST_SUPERUSER_PASSWORD=${FIRST_SUPERUSER_PASSWORD:-admin123}
+    volumes:
+      - .:/app
+    networks:
+      - app-network
+
+  db:
+    image: postgres:15-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=mental_health
+    ports:
+      - "5432:5432"
+    networks:
+      - app-network
+
+volumes:
+  postgres_data:
+
+networks:
+  app-network:
+    driver: bridge 
