@@ -1,87 +1,137 @@
-# Semáforo de Salud Mental - API
+# Mental Health App - Backend
 
-Aplicación backend para evaluación de salud mental mediante un sistema tipo semáforo, con conexión a psicólogos en caso de alertas.
+Aplicación de evaluación de salud mental con sistema de semáforo (verde, amarillo, rojo) que permite conectar usuarios con psicólogos en caso de alerta.
 
 ## Características
 
-- Evaluación de salud mental con clasificación semáforo (verde, amarillo, rojo)
-- Integración con ChatGPT para análisis de respuestas
-- Conexión con psicólogos mediante WebSockets para pacientes en estado crítico
-- API RESTful con FastAPI
+- Sistema de semáforo para evaluación de salud mental
+- Conexión con psicólogos mediante WebSockets en caso de alerta roja
 - Autenticación con JWT
-- Base de datos PostgreSQL
-- Contenedorización con Docker
+- Integración con OpenAI para análisis de respuestas
+- Persistencia de datos con PostgreSQL y Prisma ORM
+- Implementado en TypeScript y Express.js
+- Dockerizado para fácil despliegue
 
 ## Requisitos
 
-- Docker
-- Docker Compose
-- Clave API de OpenAI
+- Docker y Docker Compose
+- Node.js (solo para desarrollo local)
+- NPM o Yarn (solo para desarrollo local)
+
+## Estructura del Proyecto
+
+```
+├── prisma/                  # Configuración y esquemas de Prisma ORM
+├── src/
+│   ├── config/              # Configuración de la aplicación
+│   ├── controllers/         # Controladores de API
+│   ├── middleware/          # Middleware de autenticación
+│   ├── models/              # Modelos de datos
+│   ├── routes/              # Rutas de la API
+│   ├── services/            # Servicios (OpenAI, etc.)
+│   ├── utils/               # Utilidades
+│   ├── websocket/           # Implementación de WebSockets
+│   └── index.ts             # Punto de entrada
+├── Dockerfile               # Configuración de Docker
+├── docker-compose.yml       # Configuración de Docker Compose
+└── package.json             # Dependencias
+```
 
 ## Configuración
 
-1. Clonar el repositorio:
+### Variables de Entorno
+
+Crea un archivo `.env` en la raíz del proyecto con las siguientes variables:
+
+```
+DATABASE_URL="postgresql://postgres:postgres@db:5432/mental_health_app"
+JWT_SECRET="your-secret-key-change-in-production"
+OPENAI_API_KEY="your-openai-api-key"
+PORT=3000
+```
+
+## Despliegue con Docker
+
+1. Clona el repositorio:
+
 ```bash
-git clone <url-del-repositorio>
-cd backend-app-semillero
+git clone https://github.com/tu-usuario/mental-health-app.git
+cd mental-health-app
 ```
 
-2. Crear un archivo `.env` en la raíz del proyecto con la siguiente información:
-```
-OPENAI_API_KEY=tu_clave_api_openai
-FIRST_SUPERUSER_EMAIL=admin@example.com
-FIRST_SUPERUSER_PASSWORD=contraseña_segura
-```
+2. Crea el archivo `.env` con las variables necesarias (ver arriba)
 
-## Ejecución
+3. Ejecuta Docker Compose:
 
-1. Iniciar los servicios con Docker Compose:
 ```bash
 docker-compose up -d
 ```
 
-2. La API estará disponible en http://localhost:8000
+4. Ejecuta las migraciones de la base de datos:
 
-3. Documentación interactiva disponible en http://localhost:8000/docs
-
-## Endpoints Principales
-
-- `/api/auth/register` - Registro de usuarios
-- `/api/auth/login` - Inicio de sesión (obtener token JWT)
-- `/api/assessment/questions` - Obtener preguntas para evaluación
-- `/api/assessment/submit` - Enviar respuestas y obtener evaluación
-- `/api/assessment/history` - Historial de evaluaciones del usuario
-- `/ws/patient` - WebSocket para pacientes que necesitan ayuda
-- `/ws/psychologist` - WebSocket para psicólogos que ofrecen ayuda
-
-## Funcionamiento del Sistema de Semáforo
-
-- **Verde**: Estado mental óptimo, sin signos de problemas emocionales significativos.
-- **Amarillo**: Estado de precaución, con algunos signos de estrés, ansiedad leve o tristeza que requieren atención.
-- **Rojo**: Estado de alerta, con señales claras de depresión, ansiedad severa, pensamientos negativos recurrentes o ideación suicida.
-
-## Desarrollo
-
-Para contribuir al proyecto:
-
-1. Crear una rama para tu funcionalidad:
 ```bash
-git checkout -b feature/nombre-funcionalidad
+docker-compose exec app npx prisma migrate dev
 ```
 
-2. Realizar cambios y confirmarlos:
+5. (Opcional) Carga datos de prueba:
+
 ```bash
-git add .
-git commit -m "Descripción de los cambios"
+docker-compose exec app npm run seed
 ```
 
-3. Enviar cambios al repositorio:
+La API estará disponible en `http://localhost:3000`.
+
+## Desarrollo Local
+
+1. Instala las dependencias:
+
 ```bash
-git push origin feature/nombre-funcionalidad
+npm install
 ```
 
-4. Crear un Pull Request para revisión.
+2. Configura la variable de entorno `DATABASE_URL` para apuntar a tu base de datos local.
+
+3. Ejecuta las migraciones:
+
+```bash
+npx prisma migrate dev
+```
+
+4. Inicia el servidor en modo desarrollo:
+
+```bash
+npm run dev
+```
+
+## API Endpoints
+
+### Autenticación
+
+- `POST /api/auth/register` - Registrar un nuevo usuario
+- `POST /api/auth/login` - Iniciar sesión (usuario o psicólogo)
+
+### Evaluaciones
+
+- `GET /api/evaluaciones/preguntas` - Obtener todas las preguntas
+- `POST /api/evaluaciones` - Crear una nueva evaluación
+- `GET /api/evaluaciones` - Obtener historial de evaluaciones del usuario
+- `GET /api/evaluaciones/:id` - Obtener detalles de una evaluación
+
+### Chats
+
+- `GET /api/chats` - Obtener chats del usuario
+- `GET /api/chats/:id/mensajes` - Obtener mensajes de un chat
+- `POST /api/chats/:id/mensajes` - Enviar un mensaje
+
+## WebSockets
+
+La aplicación utiliza WebSockets para chats en tiempo real entre usuarios y psicólogos. Los eventos disponibles son:
+
+- `authenticate` - Autenticar usuario en la conexión WebSocket
+- `chat_message` - Enviar un mensaje en el chat
+- `join_chat` - Unirse a una sala de chat específica
+- `typing` - Notificar cuando un usuario está escribiendo
 
 ## Licencia
 
-[MIT](LICENSE) 
+MIT 

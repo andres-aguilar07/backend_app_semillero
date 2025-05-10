@@ -1,38 +1,31 @@
 version: '3.8'
 
 services:
-  web:
+  app:
     build: .
     ports:
-      - "8000:8000"
+      - "3000:3000"
     depends_on:
       - db
     environment:
-      - DATABASE_URL=postgresql://postgres:postgres@db:5432/mental_health
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
-      - FIRST_SUPERUSER_EMAIL=${FIRST_SUPERUSER_EMAIL:-admin@example.com}
-      - FIRST_SUPERUSER_PASSWORD=${FIRST_SUPERUSER_PASSWORD:-admin123}
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/mental_health_app
+      - JWT_SECRET=your-secret-key-change-in-production
+      - OPENAI_API_KEY=your-openai-api-key
+      - PORT=3000
     volumes:
-      - .:/app
-    networks:
-      - app-network
+      - ./:/app
+      - /app/node_modules
 
   db:
-    image: postgres:15-alpine
-    volumes:
-      - postgres_data:/var/lib/postgresql/data/
+    image: postgres:14
+    ports:
+      - "5432:5432"
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=mental_health
-    ports:
-      - "5432:5432"
-    networks:
-      - app-network
+      - POSTGRES_DB=mental_health_app
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 
 volumes:
-  postgres_data:
-
-networks:
-  app-network:
-    driver: bridge 
+  postgres_data: 
