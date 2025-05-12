@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import { generateToken } from '../config/jwt';
 import { z } from 'zod';
-
-const prisma = new PrismaClient();
+import { eq } from 'drizzle-orm';
+import { db } from '../db';
+import { usuarios, psicologos } from '../db/schema';
 
 // Validation schemas
 const registerSchema = z.object({
@@ -42,11 +42,12 @@ export const register = async (req: Request, res: Response): Promise<void> => {
     const userData = validationResult.data;
     
     // Check if user already exists
-    const existingUser = await prisma.usuario.findUnique({
-      where: { correo: userData.correo }
-    });
+    const existingUser = await db.select()
+      .from(usuarios)
+      .where(eq(usuarios.correo, userData.correo))
+      .limit(1);
     
-    if (existingUser) {
+    if (existingUser.length > 0) {
       res.status(400).json({ message: 'El correo ya está registrado' });
       return;
     }
@@ -54,13 +55,23 @@ export const register = async (req: Request, res: Response): Promise<void> => {
     // Hash password
     const hashedPassword = await bcrypt.hash(userData.contrasena, 10);
     
-    // Create user
-    const newUser = await prisma.usuario.create({
-      data: {
-        ...userData,
+    // Create user - aseguramos que todos los campos requeridos están explícitamente establecidos
+    const [newUser] = await db.insert(usuarios)
+      .values({
+        correo: userData.correo,
         contrasena: hashedPassword,
-      }
-    });
+        nombres: userData.nombres,
+        apellidos: userData.apellidos,
+        telefono: userData.telefono,
+        edad: userData.edad,
+        sexo: userData.sexo
+      })
+      .returning({
+        id: usuarios.id,
+        correo: usuarios.correo,
+        nombres: usuarios.nombres,
+        apellidos: usuarios.apellidos,
+      });
     
     // Generate token
     const token = generateToken({ 
@@ -72,12 +83,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
     // Return user data and token
     res.status(201).json({
       message: 'Usuario registrado exitosamente',
-      user: {
-        id: newUser.id,
-        correo: newUser.correo,
-        nombres: newUser.nombres,
-        apellidos: newUser.apellidos,
-      },
+      user: newUser,
       token
     });
     
@@ -109,55 +115,42 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     let user;
     
     if (tipo === 'usuario') {
-      user = await prisma.usuario.findUnique({
-        where: { correo }
-      });
-    } else {
-      user = await prisma.psicologo.findUnique({
-        where: { correo }
-      });
+      const results = await db.select()
+        .from(usuarios)
+        .where(eq(usuarios.correo, correo))
+        .limit(1);
       
-      if (user && !user.activo) {
+      if (results.length === 0) {
+        res.status(404).json({ message: 'Usuario no encontrado' });
+        return;
+      }
+      
+      user = results[0];
+      
+      // Check password for regular users
+      const passwordMatch = await bcrypt.compare(contrasena, user.contrasena);
+      
+      if (!passwordMatch) {
+        res.status(401).json({ message: 'Contraseña incorrecta' });
+        return;
+      }
+    } else {
+      const results = await db.select()
+        .from(psicologos)
+        .where(eq(psicologos.correo, correo))
+        .limit(1);
+      
+      if (results.length === 0) {
+        res.status(404).json({ message: 'Usuario no encontrado' });
+        return;
+      }
+      
+      user = results[0];
+      
+      if (!user.activo) {
         res.status(403).json({ message: 'Cuenta desactivada' });
         return;
       }
-    }
-    
-    if (!user) {
-      res.status(404).json({ message: 'Usuario no encontrado' });
-      return;
-    }
-    
-    // For psychologists, we don't have passwords in the current schema
-    // This would need to be modified in a real implementation
-    if (tipo === 'psicologo') {
-      // In a real application, psychologists would also have passwords
-      // This is just a placeholder for the prototype
-      const token = generateToken({
-        id: user.id,
-        correo: user.correo,
-        role: 'psicologo'
-      });
-      
-      res.json({
-        message: 'Inicio de sesión exitoso',
-        user: {
-          id: user.id,
-          correo: user.correo,
-          nombres: user.nombres,
-          apellidos: user.apellidos,
-        },
-        token
-      });
-      return;
-    }
-    
-    // Check password for regular users
-    const passwordMatch = await bcrypt.compare(contrasena, user.contrasena);
-    
-    if (!passwordMatch) {
-      res.status(401).json({ message: 'Contraseña incorrecta' });
-      return;
     }
     
     // Generate token

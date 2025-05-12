@@ -1,8 +1,6 @@
 import { Response } from 'express';
-import { PrismaClient } from '@prisma/client';
 import { AuthRequest } from '../middleware/auth.middleware';
-
-const prisma = new PrismaClient();
+import { dbAdapter } from '../db/drizzle-adapter';
 
 /**
  * Get current authenticated user profile
@@ -14,20 +12,8 @@ export const getProfile = async (req: AuthRequest, res: Response): Promise<void>
       return;
     }
     
-    const user = await prisma.usuario.findUnique({
-      where: {
-        id: req.user.id
-      },
-      select: {
-        id: true,
-        correo: true,
-        nombres: true,
-        apellidos: true,
-        telefono: true,
-        edad: true,
-        sexo: true,
-        fecha_registro: true
-      }
+    const user = await dbAdapter.usuarios.findUnique({
+      id: req.user.id
     });
     
     if (!user) {
@@ -35,7 +21,10 @@ export const getProfile = async (req: AuthRequest, res: Response): Promise<void>
       return;
     }
     
-    res.json(user);
+    // Eliminamos la contraseña antes de devolver el usuario
+    const { contrasena, ...userSinContrasena } = user;
+    
+    res.json(userSinContrasena);
   } catch (error) {
     console.error('Error fetching user profile:', error);
     res.status(500).json({ message: 'Error en el servidor' });

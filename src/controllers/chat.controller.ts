@@ -1,9 +1,7 @@
 import { Response } from 'express';
-import { PrismaClient } from '@prisma/client';
 import { z } from 'zod';
 import { AuthRequest } from '../middleware/auth.middleware';
-
-const prisma = new PrismaClient();
+import { dbAdapter } from '../db/drizzle-adapter';
 
 // Validation schema for messages
 const mensajeSchema = z.object({
@@ -23,34 +21,39 @@ export const getChats = async (req: AuthRequest, res: Response): Promise<void> =
     const role = req.user.role;
     const field = role === 'usuario' ? 'usuario_id' : 'psicologo_id';
     
-    const chats = await prisma.chat.findMany({
+    const chats = await dbAdapter.chats.findMany({
       where: {
         [field]: req.user.id,
         activo: true
       },
       include: {
-        usuario: {
-          select: {
-            id: true,
-            nombres: true,
-            apellidos: true
-          }
-        },
-        psicologo: {
-          select: {
-            id: true,
-            nombres: true,
-            apellidos: true,
-            especialidad: true
-          }
-        }
-      },
-      orderBy: {
-        creado_en: 'desc'
+        usuario: true,
+        psicologo: true
       }
     });
     
-    res.json(chats);
+    // Formateamos la respuesta para que sea igual que con Prisma
+    const formattedChats = chats.map(chat => {
+      // @ts-ignore
+      const { usuario, psicologo, ...chatData } = chat;
+      
+      return {
+        ...chatData,
+        usuario: usuario ? {
+          id: usuario.id,
+          nombres: usuario.nombres,
+          apellidos: usuario.apellidos
+        } : null,
+        psicologo: psicologo ? {
+          id: psicologo.id,
+          nombres: psicologo.nombres,
+          apellidos: psicologo.apellidos,
+          especialidad: psicologo.especialidad
+        } : null
+      };
+    });
+    
+    res.json(formattedChats);
   } catch (error) {
     console.error('Error fetching chats:', error);
     res.status(500).json({ message: 'Error en el servidor' });

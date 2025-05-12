@@ -1,10 +1,8 @@
 import { Request, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
 import { z } from 'zod';
 import { AuthRequest } from '../middleware/auth.middleware';
 import { analizarRespuestas } from '../services/openai.service';
-
-const prisma = new PrismaClient();
+import { dbAdapter } from '../db/drizzle-adapter';
 
 // Validation schema for evaluation responses
 const evaluacionSchema = z.object({
@@ -22,7 +20,7 @@ const evaluacionSchema = z.object({
  */
 export const getPreguntas = async (_req: Request, res: Response): Promise<void> => {
   try {
-    const preguntas = await prisma.pregunta.findMany();
+    const preguntas = await dbAdapter.preguntas.findMany();
     res.json(preguntas);
   } catch (error) {
     console.error('Error fetching questions:', error);

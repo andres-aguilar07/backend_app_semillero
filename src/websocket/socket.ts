@@ -1,7 +1,5 @@
 import { Server, Socket } from 'socket.io';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { dbAdapter } from '../db/drizzle-adapter';
 
 interface UserData {
   userId: number;
@@ -57,17 +55,21 @@ export const setupWebSocket = (io: Server): void => {
         const { chatId, emisorId, emisorTipo, mensaje } = messageData;
         
         // Save message to database
-        const newMessage = await prisma.mensajeChat.create({
-          data: {
-            chat_id: chatId,
-            emisor_id: emisorId,
-            emisor_tipo: emisorTipo,
-            mensaje
-          },
-          include: {
-            chat: true
-          }
+        const newMessage = await dbAdapter.mensajes_chat.create({
+          chat_id: chatId,
+          emisor_id: emisorId,
+          emisor_tipo: emisorTipo,
+          mensaje
         });
+        
+        // Get the chat to access the user ID
+        const chat = await dbAdapter.chats.findUnique({
+          where: { id: chatId }
+        });
+        
+        if (!chat) {
+          throw new Error('Chat not found');
+        }
         
         // Broadcast message to all users in the chat
         io.to(`chat:${chatId}`).emit('new_message', {
@@ -81,7 +83,7 @@ export const setupWebSocket = (io: Server): void => {
         
         // If a user is in "rojo" state and this is from a psychologist, send special notification
         if (emisorTipo === 'psicologo') {
-          const userId = newMessage.chat.usuario_id;
+          const userId = chat.usuario_id;
           const userSocket = onlineUsers.get(userId);
           
           if (userSocket) {
@@ -137,15 +139,10 @@ export const setupWebSocket = (io: Server): void => {
 // Helper function to get all chats for a specific user or psychologist
 async function getChatsForUser(userId: number, role: 'usuario' | 'psicologo'): Promise<number[]> {
   try {
-    const field = role === 'usuario' ? 'usuario_id' : 'psicologo_id';
-    
-    const chats = await prisma.chat.findMany({
+    const chats = await dbAdapter.chats.findMany({
       where: {
-        [field]: userId,
+        [role === 'usuario' ? 'usuario_id' : 'psicologo_id']: userId,
         activo: true
-      },
-      select: {
-        id: true
       }
     });
     

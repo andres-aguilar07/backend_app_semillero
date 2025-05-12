@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import http from 'http';
@@ -11,6 +11,8 @@ import userRoutes from './routes/user.routes';
 import evaluacionRoutes from './routes/evaluacion.routes';
 import chatRoutes from './routes/chat.routes';
 import psicologoRoutes from './routes/psicologo.routes';
+import { runMigrations } from './db/migrate';
+import { seed } from './db/seed';
 
 // Load environment variables
 dotenv.config();
@@ -37,17 +39,37 @@ app.use('/api/chats', chatRoutes);
 app.use('/api/psicologos', psicologoRoutes);
 
 // Health check endpoint
-app.get('/health', (_, res) => {
+app.get('/health', (_: Request, res: Response) => {
   res.status(200).json({ status: 'ok' });
 });
 
 // Setup WebSocket
 setupWebSocket(io);
 
-// Start server
+// Initialize database and start server
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+
+// Run migrations and seed data before starting the server
+async function initializeAndStartServer() {
+  try {
+    console.log('Initializing database...');
+    
+    // Run migrations to create tables if they don't exist
+    await runMigrations();
+    
+    // Seed basic data if needed
+    await seed();
+    
+    // Start the server
+    server.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error('Failed to initialize the server:', error);
+    process.exit(1);
+  }
+}
+
+initializeAndStartServer();
 
 export default server; 

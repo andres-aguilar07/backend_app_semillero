@@ -6,15 +6,13 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/mental_health_app
       - JWT_SECRET=your-secret-key-change-in-production
       - OPENAI_API_KEY=your-openai-api-key
       - PORT=3000
-    volumes:
-      - ./:/app
-      - /app/node_modules
 
   db:
     image: postgres:14
@@ -26,6 +24,11 @@ services:
       - POSTGRES_DB=mental_health_app
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
 volumes:
   postgres_data: 
