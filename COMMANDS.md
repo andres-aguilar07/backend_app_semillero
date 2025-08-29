@@ -1,6 +1,6 @@
-# Comandos para Iniciar la Aplicación
+# 🚀 Comandos del Proyecto - Mental Health App con IA
 
-## Primeros pasos
+## 🔧 Primeros pasos
 
 1. Clona el repositorio:
 
@@ -9,88 +9,216 @@ git clone <url-del-repositorio>
 cd backend-app-semillero
 ```
 
-2. Crea el archivo `.env` con la siguiente configuración:
-
-```
-DATABASE_URL="postgresql://postgres:postgres@db:5432/mental_health_app"
-JWT_SECRET="your-secret-key-change-in-production"
-OPENAI_API_KEY="your-openai-api-key"
-PORT=3000
-```
+2. **⚠️ NO necesitas crear archivo `.env`** - Las variables están en `docker-compose.yml`
 
 3. Asegúrate de tener Docker y Docker Compose instalados.
 
-## Ejecución con Docker
+## 🤖 Ejecución con Ollama (IA Local)
 
-Para iniciar la aplicación completa con Docker:
-
-```bash
-docker-compose up -d
-```
-
-Este comando creará y ejecutará los contenedores necesarios (backend y PostgreSQL).
-
-## Migraciones de Base de Datos
-
-Para inicializar la base de datos:
+Para iniciar la aplicación completa con IA local:
 
 ```bash
-docker-compose exec app npx prisma migrate dev
+# Construir y levantar todos los servicios (incluye Ollama)
+docker-compose up --build -d
+
+# Monitorear la descarga inicial del modelo IA
+docker-compose logs -f ollama-init
 ```
 
-## Datos de Prueba
+**🎯 La primera vez descargará automáticamente el modelo Qwen2.5:0.5b (~500MB)**
 
-Para cargar datos de prueba:
+## 📊 Verificar que todo funciona
 
 ```bash
-docker-compose exec app npm run seed
+# Verificar API principal
+curl http://localhost:3000/health
+
+# Verificar que Ollama está funcionando
+curl http://localhost:11434/api/tags
+
+# Ver logs de la aplicación
+docker-compose logs -f app
 ```
 
-## Desarrollo Local (sin Docker)
-
-1. Instala las dependencias:
+## 🧪 Probar la IA
 
 ```bash
-npm install
+# 1. Registrar un usuario de prueba
+curl -X POST http://localhost:3000/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "correo": "test@test.com",
+    "contrasena": "12345678",
+    "nombres": "Test",
+    "apellidos": "User"
+  }'
+
+# 2. Hacer login para obtener token
+curl -X POST http://localhost:3000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "correo": "test@test.com",
+    "contrasena": "12345678",
+    "tipo": "usuario"
+  }'
+
+# 3. Usar el token para probar chat con IA
+curl -X POST http://localhost:3000/api/chats/ia \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer TU_TOKEN_AQUI" \
+  -d '{"mensaje": "¿Cómo puedo mejorar mi estado de ánimo?"}'
 ```
 
-2. Configura la base de datos local y actualiza la variable `DATABASE_URL` en `.env`
+## 🗄️ Base de Datos
 
-3. Ejecuta las migraciones:
+Las migraciones y datos de prueba se ejecutan automáticamente:
 
 ```bash
-npx prisma migrate dev
+# Ver logs de inicialización
+docker-compose logs app | grep -i "database\|migration\|seed"
+
+# Ejecutar migraciones manualmente (si es necesario)
+docker-compose exec app npm run db:migrate
+
+# Cargar datos de prueba manualmente
+docker-compose exec app npm run db:seed
 ```
 
-4. Carga los datos de prueba:
+## 👥 Credenciales de Prueba
 
-```bash
-npm run seed
-```
-
-5. Inicia el servidor en modo desarrollo:
-
-```bash
-npm run dev
-```
-
-## Credenciales de Prueba
-
-Usuarios:
+Usuarios (se crean automáticamente):
 - Correo: `usuario1@example.com`, Contraseña: `Contrasena123` (estado verde)
-- Correo: `usuario2@example.com`, Contraseña: `Contrasena123` (estado amarillo)
+- Correo: `usuario2@example.com`, Contraseña: `Contrasena123` (estado amarillo)  
 - Correo: `usuario3@example.com`, Contraseña: `Contrasena123` (estado rojo)
 
 Psicólogos:
 - Correo: `psicologo1@example.com`
 - Correo: `psicologo2@example.com`
 
-## Verificar que todo funciona correctamente
+## 🔧 Comandos de Desarrollo
 
-Puedes verificar que la API está funcionando con:
-
+### Gestión de Contenedores
 ```bash
-curl http://localhost:3000/health
+# Ver estado de servicios
+docker-compose ps
+
+# Reiniciar servicios
+docker-compose restart
+
+# Ver logs específicos
+docker-compose logs -f ollama
+docker-compose logs -f app
+
+# Parar todo
+docker-compose down
+
+# Limpiar completamente (⚠️ elimina datos)
+docker-compose down -v
 ```
 
-Deberías recibir una respuesta JSON: `{"status":"ok"}` 
+### Gestión de Modelos IA
+```bash
+# Listar modelos instalados
+docker-compose exec ollama ollama list
+
+# Descargar modelo específico
+docker-compose exec ollama ollama pull qwen2.5:0.5b
+
+# Probar modelo directamente
+docker-compose exec ollama ollama run qwen2.5:0.5b "Hola, ¿cómo estás?"
+```
+
+### Desarrollo Local (sin Docker)
+```bash
+# Instalar dependencias
+npm install
+
+# Configurar variables de entorno
+export USE_OLLAMA=false
+export OPENAI_API_KEY=tu-api-key
+
+# Ejecutar en desarrollo
+npm run dev
+```
+
+## 🚀 Endpoints Principales
+
+### Autenticación
+- `POST /api/auth/register` - Registro de usuarios
+- `POST /api/auth/login` - Inicio de sesión
+
+### IA y Evaluaciones  
+- `POST /api/chats/ia` - Chat con IA local 🤖
+- `POST /api/evaluaciones` - Crear evaluación con análisis IA
+- `GET /api/evaluaciones/preguntas` - Obtener preguntas
+
+### Usuarios y Chats
+- `GET /api/users/profile` - Perfil del usuario
+- `GET /api/chats` - Chats del usuario
+- `GET /api/psicologos` - Lista de psicólogos
+
+## 🔍 Troubleshooting
+
+### Problema: "Ollama no disponible"
+```bash
+# Verificar que Ollama esté corriendo
+docker-compose ps ollama
+
+# Reiniciar Ollama
+docker-compose restart ollama
+
+# Ver logs de Ollama
+docker-compose logs ollama
+```
+
+### Problema: "Modelo no encontrado"
+```bash
+# Forzar descarga del modelo
+docker-compose exec ollama ollama pull qwen2.5:0.5b
+
+# O reiniciar el inicializador
+docker-compose up ollama-init
+```
+
+### Problema: "Out of memory"
+```bash
+# Verificar uso de recursos
+docker stats
+
+# El modelo Qwen2.5:0.5b necesita ~1GB RAM
+# Si no tienes suficiente, usa OpenAI en su lugar:
+# Cambiar USE_OLLAMA=false en docker-compose.yml
+```
+
+## 📋 Configuración Avanzada
+
+### Cambiar Modelo IA
+Editar `docker-compose.yml`:
+```yaml
+environment:
+  - OLLAMA_MODEL=llama3.2:1b  # Cambiar aquí
+```
+
+### Usar OpenAI en lugar de Ollama
+```yaml
+environment:
+  - USE_OLLAMA=false
+  - OPENAI_API_KEY=tu-api-key
+```
+
+### Monitoreo
+```bash
+# Uso de recursos
+docker stats
+
+# Logs en tiempo real
+docker-compose logs -f
+
+# Salud de servicios
+curl http://localhost:3000/health
+curl http://localhost:11434/api/tags
+```
+
+---
+
+📚 **Para más detalles sobre Ollama, ver: [OLLAMA-SETUP.md](./OLLAMA-SETUP.md)** 
