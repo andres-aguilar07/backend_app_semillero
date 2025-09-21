@@ -1,9 +1,10 @@
 import { Request, Response } from 'express';
 import { z } from 'zod';
+import { eq, desc } from 'drizzle-orm';
 import { AuthRequest } from '../middleware/auth.middleware';
-import { analizarRespuestas } from '../services/openai.service';
 import { analizarRespuestasOllama } from '../services/ollama.service';
-import { dbAdapter } from '../db/drizzle-adapter';
+import { db } from '../db';
+import * as schema from '../db/schema';
 
 // Validation schema for evaluation responses
 const evaluacionSchema = z.object({
@@ -21,7 +22,7 @@ const evaluacionSchema = z.object({
  */
 export const getPreguntas = async (_req: Request, res: Response): Promise<void> => {
   try {
-    const preguntas = await dbAdapter.preguntas.findMany();
+    const preguntas = await db.select().from(schema.preguntas);
     res.json(preguntas);
   } catch (error) {
     console.error('Error fetching questions:', error);
@@ -53,23 +54,16 @@ export const crearEvaluacion = async (req: AuthRequest, res: Response): Promise<
     const { respuestas, observaciones } = validationResult.data;
 
     // Get questions for analysis
-    const preguntas = await dbAdapter.preguntas.findMany();
+    const preguntas = await db.select().from(schema.preguntas);
 
     // Ensure respuestas have the correct type
     const respuestasTyped = respuestas as { pregunta_id: number; respuesta: number; }[];
 
     let analisisResult;
-    const useOllama = process.env.USE_OLLAMA === 'true';
 
     try {
-      
-      if (useOllama) {
-        console.log('Usando Ollama para análisis...');
-        analisisResult = await analizarRespuestasOllama(preguntas, respuestasTyped);
-      } else {
-        console.log('Usando OpenAI para análisis...');
-        analisisResult = await analizarRespuestas(preguntas, respuestasTyped);
-      }
+      console.log('Usando Ollama para análisis...');
+      analisisResult = await analizarRespuestasOllama(preguntas, respuestasTyped);
     } catch (aiError) {
       console.error('Error en análisis IA:', aiError);
       
@@ -91,18 +85,33 @@ export const crearEvaluacion = async (req: AuthRequest, res: Response): Promise<
       };
     }
 
-    // Create evaluation in database
-    const nuevaEvaluacion = await dbAdapter.evaluaciones.create({
-      data: {
+    // Create evaluation in database (map to schema)
+    const observacionesTexto = [
+      analisisResult.observaciones,
+      observaciones ? `Observaciones usuario: ${observaciones}` : null,
+    ].filter(Boolean).join(' | ');
+
+    const [nuevaEvaluacion] = await db.insert(schema.evaluaciones)
+      .values({
         usuario_id: req.user.id,
-        estado: analisisResult.estado,
-        puntaje: analisisResult.puntaje,
-        observaciones_ia: analisisResult.observaciones,
-        recomendaciones: analisisResult.recomendaciones,
-        observaciones_usuario: observaciones || null,
-        respuestas: respuestasTyped
-      }
-    });
+        puntaje_total: analisisResult.puntaje,
+        estado_semaforo: analisisResult.estado,
+        observaciones: observacionesTexto,
+      })
+      .returning();
+
+    // Insert respuestas asociadas
+    const pesoPorPregunta = new Map(preguntas.map(p => [p.id, p.peso]));
+    const respuestasAInsertar = respuestasTyped.map((r) => ({
+      evaluacion_id: nuevaEvaluacion.id,
+      pregunta_id: r.pregunta_id,
+      respuesta: r.respuesta,
+      puntaje_calculado: r.respuesta * (pesoPorPregunta.get(r.pregunta_id) || 1),
+    }));
+
+    if (respuestasAInsertar.length > 0) {
+      await db.insert(schema.respuestas).values(respuestasAInsertar);
+    }
 
     res.status(201).json({
       message: 'Evaluación creada exitosamente',
@@ -126,11 +135,11 @@ export const getEvaluaciones = async (req: AuthRequest, res: Response): Promise<
       return;
     }
 
-    const evaluaciones = await dbAdapter.evaluaciones.findMany({
-      where: {
-        usuario_id: req.user.id
-      }
-    });
+    const evaluaciones = await db
+      .select()
+      .from(schema.evaluaciones)
+      .where(eq(schema.evaluaciones.usuario_id, req.user.id as number))
+      .orderBy(desc(schema.evaluaciones.fecha));
 
     res.json(evaluaciones);
   } catch (error) {
@@ -156,11 +165,11 @@ export const getEvaluacion = async (req: AuthRequest, res: Response): Promise<vo
       return;
     }
 
-    const evaluacion = await dbAdapter.evaluaciones.findUnique({
-      where: {
-        id: evaluacionId
-      }
-    });
+    const [evaluacion] = await db
+      .select()
+      .from(schema.evaluaciones)
+      .where(eq(schema.evaluaciones.id, evaluacionId))
+      .limit(1);
 
     if (!evaluacion) {
       res.status(404).json({ message: 'Evaluación no encontrada' });

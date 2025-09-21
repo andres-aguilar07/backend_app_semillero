@@ -10,7 +10,8 @@
     "db:generate": "drizzle-kit generate:pg",
     "db:push": "drizzle-kit push:pg",
     "db:migrate": "ts-node src/db/migrate.ts",
-    "db:seed": "ts-node src/db/seed.ts"
+    "db:seed": "ts-node src/db/seed.ts",
+    "db:test": "node scripts/test-db-connection.js"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
@@ -21,7 +22,6 @@
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
     "node-fetch": "^3.3.2",
-    "openai": "^4.24.0",
     "pg": "^8.11.3",
     "socket.io": "^4.7.2",
     "zod": "^3.22.4"

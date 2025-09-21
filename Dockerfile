@@ -28,7 +28,11 @@ EXPOSE 3000
 # Create startup script as an actual file
 RUN echo '#!/bin/sh' > /app/startup.sh && \
     echo 'echo "Starting application with automatic database migration..."' >> /app/startup.sh && \
+    echo 'echo "Database config: $DATABASE_URL"' >> /app/startup.sh && \
+    echo 'echo "Waiting for database to be ready..."' >> /app/startup.sh && \
+    echo 'sleep 10' >> /app/startup.sh && \
     echo 'node dist/db/migrate.js' >> /app/startup.sh && \
+    echo 'echo "Starting the application..."' >> /app/startup.sh && \
     echo 'node dist/index.js' >> /app/startup.sh && \
     chmod +x /app/startup.sh
 

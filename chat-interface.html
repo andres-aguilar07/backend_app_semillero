@@ -159,11 +159,22 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
         .welcome-message {
             text-align: center;
             color: #666;
             font-style: italic;
             margin: 20px 0;
+        }
+
+        .typing-indicator {
+            color: #667eea;
+            animation: blink 1s infinite;
+            font-weight: bold;
         }
 
         @media (max-width: 768px) {
@@ -260,12 +271,24 @@
             messageInput.value = '';
             messageInput.style.height = 'auto';
             
-            // Disable send button and show loading
+            // Disable send button
             sendButton.disabled = true;
-            const loadingMessage = showLoading();
+
+            // Create AI message container for streaming
+            const aiMessageDiv = document.createElement('div');
+            aiMessageDiv.className = 'message ai';
+            aiMessageDiv.textContent = '';
+            chatMessages.appendChild(aiMessageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            // Add typing indicator
+            const typingIndicator = document.createElement('span');
+            typingIndicator.className = 'typing-indicator';
+            typingIndicator.textContent = '▋';
+            aiMessageDiv.appendChild(typingIndicator);
 
             try {
-                // Conectar directamente a Ollama (igual que chat-ollama.sh)
+                // Conectar a Ollama con streaming habilitado
                 const response = await fetch(`${OLLAMA_URL}/api/generate`, {
                     method: 'POST',
                     headers: {
@@ -274,7 +297,7 @@
                     body: JSON.stringify({
                         model: MODEL,
                         prompt: message,
-                        stream: false,
+                        stream: true, // Habilitar streaming
                         options: {
                             temperature: 0.7,
                             top_p: 0.9,
@@ -283,24 +306,53 @@
                     })
                 });
 
-                // Remove loading message
-                chatMessages.removeChild(loadingMessage);
+                if (!response.ok) {
+                    throw new Error(`Error HTTP: ${response.status}`);
+                }
 
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data.response) {
-                        addMessage(data.response, 'ai');
-                    } else {
-                        addMessage('Error: No se recibió respuesta del modelo.', 'error');
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let accumulatedText = '';
+
+                // Leer el stream
+                while (true) {
+                    const { done, value } = await reader.read();
+                    
+                    if (done) break;
+
+                    const chunk = decoder.decode(value, { stream: true });
+                    const lines = chunk.split('\n');
+
+                    for (const line of lines) {
+                        if (line.trim() === '') continue;
+                        
+                        try {
+                            const data = JSON.parse(line);
+                            
+                            if (data.response) {
+                                accumulatedText += data.response;
+                                // Actualizar el mensaje en tiempo real
+                                aiMessageDiv.innerHTML = accumulatedText + '<span class="typing-indicator">▋</span>';
+                                chatMessages.scrollTop = chatMessages.scrollHeight;
+                            }
+                            
+                            // Si la respuesta está completa
+                            if (data.done) {
+                                // Remover el indicador de escritura
+                                aiMessageDiv.innerHTML = accumulatedText;
+                                break;
+                            }
+                        } catch (parseError) {
+                            // Ignorar errores de parsing de JSON parcial
+                            continue;
+                        }
                     }
-                } else {
-                    addMessage(`Error: No se pudo conectar con Ollama (${response.status})`, 'error');
                 }
 
             } catch (error) {
-                // Remove loading message
-                if (chatMessages.contains(loadingMessage)) {
-                    chatMessages.removeChild(loadingMessage);
+                // Remover el mensaje de AI vacío si hay error
+                if (chatMessages.contains(aiMessageDiv)) {
+                    chatMessages.removeChild(aiMessageDiv);
                 }
                 addMessage(`Error de conexión: ${error.message}. Asegúrate de que Ollama esté corriendo en ${OLLAMA_URL}`, 'error');
             } finally {

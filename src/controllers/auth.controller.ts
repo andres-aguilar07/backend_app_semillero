@@ -4,7 +4,7 @@ import { generateToken } from '../config/jwt';
 import { z } from 'zod';
 import { eq } from 'drizzle-orm';
 import { db } from '../db';
-import { usuarios, psicologos } from '../db/schema';
+import { usuarios } from '../db/schema';
 
 // Validation schemas
 const registerSchema = z.object({
@@ -20,7 +20,6 @@ const registerSchema = z.object({
 const loginSchema = z.object({
   correo: z.string().email('Correo inválido'),
   contrasena: z.string(),
-  tipo: z.enum(['usuario', 'psicologo']),
 });
 
 /**
@@ -109,56 +108,28 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       return;
     }
     
-    const { correo, contrasena, tipo } = validationResult.data;
-    
-    // Check if the user is a regular user or a psychologist
-    let user;
-    
-    if (tipo === 'usuario') {
-      const results = await db.select()
-        .from(usuarios)
-        .where(eq(usuarios.correo, correo))
-        .limit(1);
-      
-      if (results.length === 0) {
-        res.status(404).json({ message: 'Usuario no encontrado' });
-        return;
-      }
-      
-      user = results[0];
-      
-      // Check password for regular users
-      const passwordMatch = await bcrypt.compare(contrasena, user.contrasena);
-      
-      if (!passwordMatch) {
-        res.status(401).json({ message: 'Contraseña incorrecta' });
-        return;
-      }
-    } else {
-      const results = await db.select()
-        .from(psicologos)
-        .where(eq(psicologos.correo, correo))
-        .limit(1);
-      
-      if (results.length === 0) {
-        res.status(404).json({ message: 'Usuario no encontrado' });
-        return;
-      }
-      
-      user = results[0];
-      
-      if (!user.activo) {
-        res.status(403).json({ message: 'Cuenta desactivada' });
-        return;
-      }
+    const { correo, contrasena } = validationResult.data;
+
+    const results = await db.select()
+      .from(usuarios)
+      .where(eq(usuarios.correo, correo))
+      .limit(1);
+
+    if (results.length === 0) {
+      res.status(404).json({ message: 'Usuario no encontrado' });
+      return;
+    }
+
+    const user = results[0];
+
+    const passwordMatch = await bcrypt.compare(contrasena, user.contrasena);
+    if (!passwordMatch) {
+      res.status(401).json({ message: 'Contraseña incorrecta' });
+      return;
     }
     
     // Generate token
-    const token = generateToken({
-      id: user.id,
-      correo: user.correo,
-      role: tipo
-    });
+    const token = generateToken({ id: user.id, correo: user.correo, role: 'usuario' });
     
     // Return user data and token
     res.json({

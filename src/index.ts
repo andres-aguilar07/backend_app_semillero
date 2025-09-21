@@ -10,7 +10,6 @@ import authRoutes from './routes/auth.routes';
 import userRoutes from './routes/user.routes';
 import evaluacionRoutes from './routes/evaluacion.routes';
 import chatRoutes from './routes/chat.routes';
-import psicologoRoutes from './routes/psicologo.routes';
 import { runMigrations } from './db/migrate';
 import { seed } from './db/seed';
 import { initializeOllama } from './services/ollama.service';
@@ -37,7 +36,6 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/evaluaciones', evaluacionRoutes);
 app.use('/api/chats', chatRoutes);
-app.use('/api/psicologos', psicologoRoutes);
 
 // Health check endpoint
 app.get('/health', (_: Request, res: Response) => {
@@ -62,9 +60,6 @@ async function initializeAndStartServer() {
     await seed();
     
     // Initialize Ollama if enabled
-    const useOllama = process.env.USE_OLLAMA === 'true';
-    if (useOllama) {
-      console.log('Initializing Ollama...');
       try {
         await initializeOllama();
         console.log('Ollama initialized successfully');
@@ -72,17 +67,12 @@ async function initializeAndStartServer() {
         console.warn('Warning: Could not initialize Ollama:', ollamaError);
         console.log('Server will continue without Ollama support');
       }
-    } else {
-      console.log('Ollama disabled, using OpenAI service');
-    }
     
     // Start the server
     server.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
       console.log(`Health check available at http://localhost:${PORT}/health`);
-      if (useOllama) {
-        console.log(`AI Chat available at http://localhost:${PORT}/api/chats/ia`);
-      }
+      console.log(`AI Chat available at http://localhost:${PORT}/api/chats/ia`);
     });
   } catch (error) {
     console.error('Failed to initialize the server:', error);

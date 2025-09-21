@@ -40,17 +40,7 @@ async function seed() {
     
     console.log('Added test user');
     
-    // Create test psychologist
-    await db.insert(schema.psicologos).values({
-      correo: 'psicologo@test.com',
-      nombres: 'Psicólogo',
-      apellidos: 'De Prueba',
-      telefono: '0987654321',
-      especialidad: 'Psicología clínica',
-      activo: true
-    });
-    
-    console.log('Added test psychologist');
+    // Nota: ya no se crean psicólogos, solo usuarios
     
     console.log('Database seeded successfully');
   } catch (error) {

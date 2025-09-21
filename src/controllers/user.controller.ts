@@ -1,6 +1,8 @@
 import { Response } from 'express';
 import { AuthRequest } from '../middleware/auth.middleware';
-import { dbAdapter } from '../db/drizzle-adapter';
+import { db } from '../db';
+import * as schema from '../db/schema';
+import { eq } from 'drizzle-orm';
 
 /**
  * Get current authenticated user profile
@@ -12,9 +14,11 @@ export const getProfile = async (req: AuthRequest, res: Response): Promise<void>
       return;
     }
     
-    const user = await dbAdapter.usuarios.findUnique({
-      id: req.user.id
-    });
+    const [user] = await db
+      .select()
+      .from(schema.usuarios)
+      .where(eq(schema.usuarios.id, req.user.id as number))
+      .limit(1);
     
     if (!user) {
       res.status(404).json({ message: 'Usuario no encontrado' });
