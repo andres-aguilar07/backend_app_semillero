@@ -4,6 +4,14 @@ node_modules/
 # Environment variables
 .env
 
+# SSL Certificates (NEVER commit these!)
+ssl/
+*.key
+*.crt
+*.pem
+*.p12
+*.pfx
+
 # Logs
 logs
 *.log

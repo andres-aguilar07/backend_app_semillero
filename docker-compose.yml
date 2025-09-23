@@ -22,8 +22,10 @@ services:
 
   app:
     build: .
-    ports:
-      - "${PORT:-3000}:${PORT:-3000}"
+    # ports:
+    #   - "${PORT:-3000}:${PORT:-3000}"  # Puerto removido - solo accesible via nginx
+    expose:
+      - "3000"  # Expone el puerto solo dentro de la red Docker
     environment:
       # Database configuration
       - DATABASE_URL=postgresql://${DB_USER:-postgres}:${DB_PASSWORD:-passw}@postgres:5432/${DB_NAME:-mental_health_app}
@@ -71,6 +73,21 @@ services:
     networks:
       - app-network
     restart: "no"
+
+  # Nginx como proxy reverso
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - app
+    networks:
+      - app-network
+    restart: unless-stopped
 
 volumes:
   postgres_data:
