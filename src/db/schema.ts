@@ -278,7 +278,6 @@ export const opciones_registro_actividades = pgTable('opciones_registro_activida
 
   url_imagen: varchar('url_imagen', { length: 255 }).notNull(),
 
-
   created_at: timestamp('created_at').defaultNow().notNull(),
   updated_at: timestamp('updated_at').defaultNow().notNull(),
   deleted_at: timestamp('deleted_at'),
@@ -332,6 +331,8 @@ export const chats = pgTable('chats', {
   iniciado_en: timestamp('iniciado_en').defaultNow().notNull(),
   ultima_actividad: timestamp('ultima_actividad').defaultNow().notNull(),
   finalizado_en: timestamp('finalizado_en'),
+
+  isSendByAi: boolean('isSendByAi').default(false).notNull(),
   
   is_active: boolean('is_active').default(true).notNull(),
 
