@@ -4,7 +4,11 @@ import morgan from 'morgan';
 import http from 'http';
 import { Server as SocketServer } from 'socket.io';
 import dotenv from 'dotenv';
-
+import encuestasRoutes from './routes/encuestas.routes'
+import encuestasRespuestasRoutes from './routes/encuestas-respuestas.routes'
+import diarioRoutes from './routes/diario.routes'
+import opcionesActividadesRoutes from './routes/opciones-actividades.routes'
+import registroActividadesRoutes from './routes/registro-actividades.routes'
 import { setupWebSocket } from './websocket/socket';
 import authRoutes from './routes/auth.routes';
 import userRoutes from './routes/user.routes';
@@ -36,6 +40,11 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/evaluaciones', evaluacionRoutes);
 app.use('/api/chats', chatRoutes);
+app.use('/api/encuestas', encuestasRoutes)
+app.use('/api/encuestas-respuestas', encuestasRespuestasRoutes)
+app.use('/api/diario', diarioRoutes)
+app.use('/api/opciones-actividades', opcionesActividadesRoutes)
+app.use('/api/registro-actividades', registroActividadesRoutes)
 
 // Health check endpoint
 app.get('/health', (_: Request, res: Response) => {
@@ -82,4 +91,4 @@ async function initializeAndStartServer() {
 
 initializeAndStartServer();
 
-export default server; 
+export default server;
