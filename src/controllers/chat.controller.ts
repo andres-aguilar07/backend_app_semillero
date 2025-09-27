@@ -254,3 +254,376 @@ export const deleteChat = async (req: AuthRequest, res: any) => {
     return res.status(500).json({ message: 'Error en el servidor' });
   }
 }
+
+// ================================
+// FUNCIONES AVANZADAS DE IA
+// ================================
+
+// Helper functions para IA avanzada
+const obtenerUltimaEvaluacion = async (usuarioId: number) => {
+  const evaluacion = await db
+    .select()
+    .from(schema.evaluaciones)
+    .where(eq(schema.evaluaciones.usuario_id, usuarioId))
+    .orderBy(desc(schema.evaluaciones.fecha))
+    .limit(1);
+  
+  return evaluacion[0] || null;
+};
+
+const obtenerRegistrosActividades = async (usuarioId: number, limit: number = 5) => {
+  const actividades = await db
+    .select({
+      id: schema.registro_actividades_usuarios.id,
+      opcion_id: schema.registro_actividades_usuarios.opcion_id,
+      fecha: schema.registro_actividades_usuarios.fecha,
+      observaciones: schema.registro_actividades_usuarios.observaciones,
+      opcion: {
+        nombre: schema.opciones_registro_actividades.nombre,
+        descripcion: schema.opciones_registro_actividades.descripcion,
+        url_imagen: schema.opciones_registro_actividades.url_imagen
+      }
+    })
+    .from(schema.registro_actividades_usuarios)
+    .leftJoin(
+      schema.opciones_registro_actividades,
+      eq(schema.registro_actividades_usuarios.opcion_id, schema.opciones_registro_actividades.id)
+    )
+    .where(eq(schema.registro_actividades_usuarios.usuario_id, usuarioId))
+    .orderBy(desc(schema.registro_actividades_usuarios.fecha))
+    .limit(limit);
+  
+  return actividades;
+};
+
+const obtenerRegistrosEmocionales = async (usuarioId: number, limit: number = 5) => {
+  const emociones = await db
+    .select({
+      id: schema.registro_emocional.id,
+      opcion_id: schema.registro_emocional.opcion_id,
+      fecha: schema.registro_emocional.fecha,
+      observaciones: schema.registro_emocional.observaciones,
+      opcion: {
+        nombre: schema.opciones_registro_emocional.nombre,
+        descripcion: schema.opciones_registro_emocional.descripcion,
+        puntaje: schema.opciones_registro_emocional.puntaje
+      }
+    })
+    .from(schema.registro_emocional)
+    .leftJoin(
+      schema.opciones_registro_emocional,
+      eq(schema.registro_emocional.opcion_id, schema.opciones_registro_emocional.id)
+    )
+    .where(eq(schema.registro_emocional.usuario_id, usuarioId))
+    .orderBy(desc(schema.registro_emocional.fecha))
+    .limit(limit);
+  
+  return emociones;
+};
+
+const yaRecomendoFormulario = async (usuarioId: number): Promise<boolean> => {
+  const mensajes = await db
+    .select()
+    .from(schema.mensajes_chat)
+    .where(eq(schema.mensajes_chat.usuario_id, usuarioId))
+    .orderBy(desc(schema.mensajes_chat.enviado_en))
+    .limit(10);
+
+  const frasesRecomendacion = [
+    "completar la evaluación emocional",
+    "evaluación emocional",
+    "cuestionario emocional",
+    "formulario de evaluación",
+    "evaluación inicial",
+    "cuestionario inicial",
+    "evaluación psicológica",
+    "formulario psicológico",
+    "evaluar tu estado emocional",
+    "completar el formulario",
+    "realizar la evaluación"
+  ];
+
+  for (const mensaje of mensajes) {
+    const respuestaLower = mensaje.mensaje.toLowerCase();
+    for (const frase of frasesRecomendacion) {
+      if (respuestaLower.includes(frase)) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+};
+
+const extraerTareasDelContenido = (contenido: string): any[] => {
+  const regex = /Bloque de tareas sugeridas:\s*(\[[\s\S]+?\])/;
+  const match = contenido.match(regex);
+  
+  if (match) {
+    try {
+      return JSON.parse(match[1]);
+    } catch (error) {
+      console.error('Error al parsear tareas:', error);
+      return [];
+    }
+  }
+  
+  return [];
+};
+
+/**
+ * Chat avanzado con IA - versión mejorada
+ */
+export const chatConIAAvanzado = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    if (!req.user?.id) {
+      res.status(401).json({ message: 'Usuario no autenticado' });
+      return;
+    }
+
+    const validationResult = chatIASchema.safeParse(req.body);
+    if (!validationResult.success) {
+      res.status(400).json({ 
+        message: 'Datos inválidos', 
+        errors: validationResult.error.errors 
+      });
+      return;
+    }
+
+    const { mensaje, contexto } = validationResult.data;
+    const usuarioId = req.user.id;
+
+    // Obtener información del usuario
+    const evaluacion = await obtenerUltimaEvaluacion(usuarioId);
+    const actividades = await obtenerRegistrosActividades(usuarioId);
+    const emociones = await obtenerRegistrosEmocionales(usuarioId);
+    const recomendoFormulario = await yaRecomendoFormulario(usuarioId);
+
+    // Construir contexto del usuario
+    let contextoUsuario = '';
+    
+    if (evaluacion) {
+      contextoUsuario += `\n📊 Estado emocional actual: ${evaluacion.estado_semaforo} (Puntaje: ${evaluacion.puntaje_total})\n`;
+      if (evaluacion.observaciones) {
+        contextoUsuario += `Observaciones: ${evaluacion.observaciones}\n`;
+      }
+    }
+
+    if (actividades.length > 0) {
+      contextoUsuario += `\n🏃 Actividades recientes:\n`;
+      actividades.forEach(act => {
+        contextoUsuario += `- ${act.opcion?.nombre || 'Actividad'}: ${act.fecha.toISOString().split('T')[0]}\n`;
+      });
+    }
+
+    if (emociones.length > 0) {
+      contextoUsuario += `\n😊 Registros emocionales recientes:\n`;
+      emociones.forEach(em => {
+        contextoUsuario += `- ${em.opcion?.nombre || 'Emoción'} (${em.opcion?.puntaje || 0}/10): ${em.fecha.toISOString().split('T')[0]}\n`;
+      });
+    }
+
+    // Construir prompt base
+    const promptBase = `
+Actúa como un asistente terapéutico especializado en salud mental y bienestar emocional. Estás interactuando con un usuario que atraviesa un proceso de recuperación emocional. Tu propósito exclusivo es brindar apoyo conversacional empático, sin realizar diagnósticos clínicos ni emitir juicios.
+
+⚠️ IMPORTANTE: Tu función está estrictamente limitada al contexto de salud mental. No puedes brindar información, consejos ni ayuda en temas que no sean emocionales o relacionados al bienestar personal.
+
+📌 Temas estrictamente prohibidos (no debes responder sobre esto):
+- Programación, código, desarrollo de software o IA
+- Matemáticas, física o ciencia académica
+- Ayuda en tareas, trabajos, exámenes o solución de ejercicios
+- Historia, cultura general, geografía, idiomas o biología
+- Tecnología, juegos, política o economía
+- Opiniones sobre productos, gustos, películas o arte
+- Religión, creencias personales o filosofía
+
+⚠️ Si el usuario realiza una pregunta fuera del contexto emocional o busca ayuda en tareas, responde exclusivamente con una frase como alguna de las siguientes (elige la más adecuada):
+1. "Mi función es acompañarte emocionalmente. ¿Quieres contarme cómo te has sentido últimamente?"
+2. "Estoy aquí para escucharte y ayudarte en tu proceso emocional, ¿quieres que hablemos de cómo estás hoy?"
+3. "Puedo ayudarte a entender lo que sientes o apoyarte si estás pasando por algo difícil. ¿Te gustaría que hablemos sobre eso?"
+4. "No puedo ayudarte con ese tema, pero estoy aquí para hablar contigo sobre lo que sientes y cómo te afecta."
+5. "Mi propósito no es resolver ejercicios ni responder preguntas técnicas, pero puedo escucharte si necesitas desahogarte."
+
+✏️ Asegúrate de que tus respuestas varíen en longitud, estructura y tono. Algunas pueden ser breves y directas, otras un poco más reflexivas. No uses lenguaje robótico ni repitas frases.
+
+🎯 Evita listas, repeticiones o respuestas artificiales. Sé humano, cercano, realista.
+
+${contextoUsuario}
+
+Usuario: ${mensaje}
+`;
+
+    let prompt = promptBase;
+
+    // Agregar recomendación de formulario si es necesario
+    if (!evaluacion && !recomendoFormulario) {
+      prompt += `
+
+⚠️ El usuario aún no ha completado su evaluación emocional inicial. 
+Responde de forma empática, y al final incluye esta sugerencia (marcada para el sistema): 
+[RECOMENDAR_FORMULARIO]`;
+    } else if (evaluacion) {
+      prompt += `
+
+💡 Si consideras que es útil, incluye al final de tu respuesta un bloque con tareas sugeridas para el usuario en el siguiente formato JSON:
+Bloque de tareas sugeridas:
+[
+  {
+    "titulo": "...",
+    "descripcion": "...",
+    "prioridad": "alta|media|baja"
+  },
+  ...
+]`;
+    }
+
+    // Llamar a la IA
+    const respuestaIA = await chatWithOllama(prompt, contexto);
+
+    // Procesar respuesta
+    const mostrarSugerenciaFormulario = respuestaIA.respuesta.includes('[RECOMENDAR_FORMULARIO]');
+    const contenidoLimpio = respuestaIA.respuesta.replace('[RECOMENDAR_FORMULARIO]', '').trim();
+
+    // Extraer tareas si existen
+    const tareas = extraerTareasDelContenido(contenidoLimpio);
+
+    res.json({
+      mensaje: {
+        text: contenidoLimpio,
+        isUser: false,
+        esRecomendacion: mostrarSugerenciaFormulario
+      },
+      tareas_generadas: tareas,
+      timestamp: respuestaIA.timestamp,
+      usuario_id: usuarioId
+    });
+
+  } catch (error) {
+    console.error('Error en chat con IA:', error);
+    res.status(500).json({ message: 'Error en el servidor' });
+  }
+};
+
+/**
+ * Obtener actividades recomendadas para el usuario
+ */
+export const obtenerActividadesRecomendadas = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    if (!req.user?.id) {
+      res.status(401).json({ message: 'Usuario no autenticado' });
+      return;
+    }
+
+    const usuarioId = req.user.id;
+    const evaluacion = await obtenerUltimaEvaluacion(usuarioId);
+
+    // Obtener todas las opciones de actividades
+    const opcionesActividades = await db
+      .select()
+      .from(schema.opciones_registro_actividades);
+
+    // Obtener actividades ya realizadas por el usuario
+    const actividadesRealizadas = await db
+      .select({ opcion_id: schema.registro_actividades_usuarios.opcion_id })
+      .from(schema.registro_actividades_usuarios)
+      .where(eq(schema.registro_actividades_usuarios.usuario_id, usuarioId));
+
+    const idsRealizadas = new Set(actividadesRealizadas.map(a => a.opcion_id));
+
+    // Filtrar actividades no realizadas
+    const actividadesDisponibles = opcionesActividades.filter(
+      actividad => !idsRealizadas.has(actividad.id)
+    );
+
+    // Recomendar basado en el estado emocional
+    let recomendaciones = actividadesDisponibles;
+
+    if (evaluacion) {
+      switch (evaluacion.estado_semaforo) {
+        case 'rojo':
+          // Actividades más relajantes y de autocuidado
+          recomendaciones = actividadesDisponibles.filter(a => 
+            a.nombre.toLowerCase().includes('relajación') ||
+            a.nombre.toLowerCase().includes('meditación') ||
+            a.nombre.toLowerCase().includes('respiración') ||
+            a.nombre.toLowerCase().includes('yoga')
+          );
+          break;
+        case 'amarillo':
+          // Actividades moderadas
+          recomendaciones = actividadesDisponibles.filter(a => 
+            !a.nombre.toLowerCase().includes('intenso') &&
+            !a.nombre.toLowerCase().includes('extremo')
+          );
+          break;
+        case 'verde':
+          // Cualquier actividad
+          recomendaciones = actividadesDisponibles;
+          break;
+      }
+    }
+
+    res.json({
+      actividades_recomendadas: recomendaciones.slice(0, 5), // Top 5
+      estado_emocional: evaluacion?.estado_semaforo || 'sin_evaluar',
+      total_disponibles: actividadesDisponibles.length
+    });
+
+  } catch (error) {
+    console.error('Error obteniendo actividades:', error);
+    res.status(500).json({ message: 'Error en el servidor' });
+  }
+};
+
+/**
+ * Obtener estado psicológico del usuario
+ */
+export const obtenerEstadoPsicologicoUsuario = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    if (!req.user?.id) {
+      res.status(401).json({ message: 'Usuario no autenticado' });
+      return;
+    }
+
+    const usuarioId = req.user.id;
+    const evaluacion = await obtenerUltimaEvaluacion(usuarioId);
+
+    if (!evaluacion) {
+      res.json({
+        tiene_evaluacion: false,
+        mensaje: 'Aún no has completado tu evaluación emocional inicial'
+      });
+      return;
+    }
+
+    // Obtener estadísticas adicionales
+    const totalActividades = await db
+      .select({ count: schema.registro_actividades_usuarios.id })
+      .from(schema.registro_actividades_usuarios)
+      .where(eq(schema.registro_actividades_usuarios.usuario_id, usuarioId));
+
+    const totalEmociones = await db
+      .select({ count: schema.registro_emocional.id })
+      .from(schema.registro_emocional)
+      .where(eq(schema.registro_emocional.usuario_id, usuarioId));
+
+    res.json({
+      tiene_evaluacion: true,
+      estado_actual: {
+        nivel: evaluacion.estado_semaforo,
+        puntaje: evaluacion.puntaje_total,
+        observaciones: evaluacion.observaciones,
+        fecha_evaluacion: evaluacion.fecha
+      },
+      estadisticas: {
+        actividades_completadas: totalActividades.length,
+        registros_emocionales: totalEmociones.length
+      }
+    });
+
+  } catch (error) {
+    console.error('Error obteniendo estado psicológico:', error);
+    res.status(500).json({ message: 'Error en el servidor' });
+  }
+};

@@ -150,42 +150,70 @@ export const analizarRespuestasOllama = async (
       };
     });
     
-    // Calcular puntaje base para fallback
+    // Algoritmo avanzado de semáforo para evitar filtraciones
     let rawScore = 0;
+    let respuestasAltas = 0; // Contador de respuestas 4-5
+    let respuestasBajas = 0; // Contador de respuestas 1-2
+    const totalPreguntas = preguntasRespuestas.length;
+    
     preguntasRespuestas.forEach(item => {
-      rawScore += (item.respuesta * item.peso);
+      const puntajePonderado = item.respuesta * item.peso;
+      rawScore += puntajePonderado;
+      
+      if (item.respuesta >= 4) respuestasAltas++;
+      if (item.respuesta <= 2) respuestasBajas++;
     });
     
-    // Estado fallback basado en puntaje
+    const porcentajeAltas = (respuestasAltas / totalPreguntas) * 100;
+    const puntajePromedio = rawScore / totalPreguntas;
+    
+    // Criterios más estrictos para evitar filtraciones
     let fallbackState: 'verde' | 'amarillo' | 'rojo' = 'verde';
-    if (rawScore > 40) {
+    
+    if (rawScore > 50 && porcentajeAltas > 60) {
+      // Solo ROJO si puntaje alto Y más del 60% de respuestas son altas (4-5)
       fallbackState = 'rojo';
-    } else if (rawScore > 25) {
+    } else if (rawScore > 35 || porcentajeAltas > 40) {
+      // AMARILLO si puntaje moderado O más del 40% de respuestas altas
       fallbackState = 'amarillo';
+    } else if (rawScore > 20 || porcentajeAltas > 25) {
+      // AMARILLO suave si hay indicadores moderados
+      fallbackState = 'amarillo';
+    } else {
+      // VERDE por defecto
+      fallbackState = 'verde';
     }
 
-    const systemPrompt = `Eres un psicólogo experto especializado en evaluaciones de salud mental. Debes responder ÚNICAMENTE en formato JSON válido.`;
+    const systemPrompt = `Eres un psicólogo clínico experto especializado en evaluaciones de salud mental y bienestar emocional. Tu función es analizar respuestas de cuestionarios psicológicos y proporcionar evaluaciones precisas y profesionales. Debes responder ÚNICAMENTE en formato JSON válido, sin comentarios adicionales.`;
 
     const prompt = `
-    Analiza las siguientes respuestas de una evaluación de salud mental (escala 1-5, donde 5 es más grave):
+    Analiza las siguientes respuestas de una evaluación de salud mental (escala 1-5, donde 5 indica mayor gravedad):
     
     ${preguntasRespuestas.map(pr => 
       `- Pregunta: "${pr.pregunta}" (Peso: ${pr.peso})
        - Respuesta: ${pr.respuesta}/5`
     ).join('\n\n')}
     
+    CRITERIOS DE EVALUACIÓN:
+    - VERDE: Puntaje 0-30 - Estado emocional estable, bienestar general, sin signos de alerta significativos
+    - AMARILLO: Puntaje 31-60 - Alerta moderada, algunos síntomas de malestar emocional, requiere atención y seguimiento
+    - ROJO: Puntaje 61-100 - Alerta grave, múltiples síntomas de malestar emocional, requiere intervención profesional inmediata
+    
+    IMPORTANTE: Sé conservador en la evaluación. Solo asigna ROJO si hay evidencia clara de múltiples síntomas graves. 
+    Prefiere AMARILLO cuando haya dudas razonables.
+    
     Determina:
-    1. Un estado de semáforo: "verde" (estado óptimo), "amarillo" (alerta moderada), o "rojo" (alerta grave)
-    2. Un puntaje numérico (0-100) que represente la gravedad
-    3. Una observación clínica breve sobre el estado mental
-    4. Tres recomendaciones prácticas personalizadas
+    1. Un estado de semáforo basado en los criterios anteriores
+    2. Un puntaje numérico (0-100) que represente la gravedad general
+    3. Una observación clínica profesional y empática sobre el estado mental
+    4. Tres recomendaciones prácticas y específicas para el bienestar emocional
     
     Responde SOLO en este formato JSON:
     {
       "estado": "verde/amarillo/rojo",
       "puntaje": 0-100,
-      "observaciones": "tu análisis clínico breve",
-      "recomendaciones": ["recomendación 1", "recomendación 2", "recomendación 3"]
+      "observaciones": "análisis clínico profesional y empático",
+      "recomendaciones": ["recomendación específica 1", "recomendación específica 2", "recomendación específica 3"]
     }`;
 
     const response = await queryOllama(prompt, systemPrompt);
@@ -219,16 +247,39 @@ export const analizarRespuestasOllama = async (
   } catch (error) {
     console.error('Error en análisis con Ollama:', error);
     
-    // Fallback completo
+    // Fallback completo con algoritmo avanzado
     const rawScore = respuestas.reduce((sum, resp) => {
       const pregunta = preguntas.find(p => p.id === resp.pregunta_id);
       return sum + (resp.respuesta * (pregunta?.peso || 1));
     }, 0);
+
+    // Calcular estadísticas para fallback
+    let respuestasAltas = 0;
+    const totalPreguntas = respuestas.length;
+    
+    respuestas.forEach(resp => {
+      if (resp.respuesta >= 4) respuestasAltas++;
+    });
+    
+    const porcentajeAltas = (respuestasAltas / totalPreguntas) * 100;
+    
+    // Aplicar criterios estrictos
+    let estado: 'verde' | 'amarillo' | 'rojo' = 'verde';
+    
+    if (rawScore > 50 && porcentajeAltas > 60) {
+      estado = 'rojo';
+    } else if (rawScore > 35 || porcentajeAltas > 40) {
+      estado = 'amarillo';
+    } else if (rawScore > 20 || porcentajeAltas > 25) {
+      estado = 'amarillo';
+    } else {
+      estado = 'verde';
+    }
     
     return {
-      estado: rawScore > 40 ? 'rojo' : rawScore > 25 ? 'amarillo' : 'verde',
+      estado,
       puntaje: Math.min(rawScore * 2, 100),
-      observaciones: 'Evaluación realizada con sistema de respaldo debido a error en el análisis avanzado',
+      observaciones: `Evaluación realizada con sistema de respaldo avanzado. Puntaje: ${rawScore}, Respuestas altas: ${porcentajeAltas.toFixed(1)}%`,
       recomendaciones: [
         'Mantén rutinas saludables de sueño y ejercicio',
         'Busca apoyo en familiares y amigos cercanos',
@@ -243,7 +294,15 @@ export const analizarRespuestasOllama = async (
  */
 export const chatWithOllama = async (mensaje: string, contexto?: string): Promise<ChatResponse> => {
   try {
-    const systemPrompt = `Eres un asistente de salud mental empático y profesional. Proporciona respuestas útiles, comprensivas y apropiadas. Mantén un tono cálido pero profesional. Si detectas signos de crisis, recomienda buscar ayuda profesional inmediatamente.`;
+    const systemPrompt = `Eres un asistente terapéutico especializado en salud mental y bienestar emocional. Tu función es brindar apoyo conversacional empático y profesional, centrado exclusivamente en temas de salud mental, emociones y bienestar personal. 
+
+IMPORTANTE: 
+- Solo responde sobre temas relacionados con salud mental, emociones, bienestar personal y desarrollo personal
+- Si el usuario pregunta sobre otros temas (programación, tareas académicas, tecnología, etc.), redirige gentilmente hacia temas emocionales
+- Mantén un tono cálido, empático y profesional
+- Si detectas signos de crisis o pensamientos de autolesión, recomienda buscar ayuda profesional inmediatamente
+- Evita dar diagnósticos clínicos específicos
+- Sé conservador y empático en tus respuestas`;
     
     let prompt = mensaje;
     if (contexto) {

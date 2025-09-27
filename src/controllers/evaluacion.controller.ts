@@ -67,16 +67,46 @@ export const crearEvaluacion = async (req: AuthRequest, res: Response): Promise<
     } catch (aiError) {
       console.error('Error en análisis IA:', aiError);
       
-      // Fallback calculation
+      // Algoritmo avanzado de semáforo para evitar filtraciones
       const rawScore = respuestasTyped.reduce((sum, resp) => {
         const pregunta = preguntas.find(p => p.id === resp.pregunta_id);
         return sum + (resp.respuesta * (pregunta?.peso || 1));
       }, 0);
 
+      // Calcular estadísticas adicionales
+      let respuestasAltas = 0; // Contador de respuestas 4-5
+      let respuestasBajas = 0; // Contador de respuestas 1-2
+      const totalPreguntas = respuestasTyped.length;
+      
+      respuestasTyped.forEach(resp => {
+        if (resp.respuesta >= 4) respuestasAltas++;
+        if (resp.respuesta <= 2) respuestasBajas++;
+      });
+      
+      const porcentajeAltas = (respuestasAltas / totalPreguntas) * 100;
+      const puntajePromedio = rawScore / totalPreguntas;
+      
+      // Criterios más estrictos para evitar filtraciones
+      let estado: 'verde' | 'amarillo' | 'rojo' = 'verde';
+      
+      if (rawScore > 50 && porcentajeAltas > 60) {
+        // Solo ROJO si puntaje alto Y más del 60% de respuestas son altas (4-5)
+        estado = 'rojo';
+      } else if (rawScore > 35 || porcentajeAltas > 40) {
+        // AMARILLO si puntaje moderado O más del 40% de respuestas altas
+        estado = 'amarillo';
+      } else if (rawScore > 20 || porcentajeAltas > 25) {
+        // AMARILLO suave si hay indicadores moderados
+        estado = 'amarillo';
+      } else {
+        // VERDE por defecto
+        estado = 'verde';
+      }
+
       analisisResult = {
-        estado: rawScore > 40 ? 'rojo' : rawScore > 25 ? 'amarillo' : 'verde',
+        estado,
         puntaje: Math.min(rawScore * 2, 100),
-        observaciones: 'Evaluación realizada con sistema de respaldo debido a error en el análisis IA',
+        observaciones: `Evaluación realizada con sistema de respaldo avanzado. Puntaje: ${rawScore}, Respuestas altas: ${porcentajeAltas.toFixed(1)}%`,
         recomendaciones: [
           'Mantén rutinas saludables de sueño y ejercicio',
           'Busca apoyo en familiares y amigos cercanos',

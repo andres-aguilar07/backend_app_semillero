@@ -1,6 +1,18 @@
 import { Router } from 'express';
 import { authenticate } from '../middleware/auth.middleware';
-import { listChats, getChatById, createChat, updateChatPut, updateChatPatch, deleteChat, chatConIA, getHistorialChatIA } from '../controllers/chat.controller';
+import { 
+  listChats, 
+  getChatById, 
+  createChat, 
+  updateChatPut, 
+  updateChatPatch, 
+  deleteChat, 
+  chatConIA, 
+  getHistorialChatIA,
+  chatConIAAvanzado,
+  obtenerActividadesRecomendadas,
+  obtenerEstadoPsicologicoUsuario
+} from '../controllers/chat.controller';
 import { createMensaje, deleteMensaje, getMensajeById, listMensajes, updateMensajePatch, updateMensajePut } from '../controllers/chat-mensajes.controller';
 
 const router = Router();
@@ -24,5 +36,10 @@ router.delete('/:chatId/mensajes/:mensajeId', authenticate, deleteMensaje)
 // Rutas IA existentes
 router.post('/ia', authenticate, chatConIA);
 router.get('/ia/historial', authenticate, getHistorialChatIA);
+
+// Rutas IA avanzadas
+router.post('/ia/avanzado', authenticate, chatConIAAvanzado);
+router.get('/actividades/recomendadas', authenticate, obtenerActividadesRecomendadas);
+router.get('/estado-psicologico', authenticate, obtenerEstadoPsicologicoUsuario);
 
 export default router;

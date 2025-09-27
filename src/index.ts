@@ -82,6 +82,7 @@ async function initializeAndStartServer() {
       console.log(`Server is running on port ${PORT}`);
       console.log(`Health check available at http://localhost:${PORT}/health`);
       console.log(`AI Chat available at http://localhost:${PORT}/api/chats/ia`);
+      console.log(`Advanced AI Chat available at http://localhost:${PORT}/api/chats/ia/avanzado`);
     });
   } catch (error) {
     console.error('Failed to initialize the server:', error);

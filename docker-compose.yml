@@ -1,53 +1,20 @@
 services:
-  # Base de datos PostgreSQL
-  postgres:
-    image: postgres:14-alpine
-    environment:
-      POSTGRES_DB: ${DB_NAME:-mental_health_app}
-      POSTGRES_USER: ${DB_USER:-postgres}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-passw}
-    ports:
-      - "${DB_PORT:-5432}:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    networks:
-      - app-network
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres} -d ${DB_NAME:-mental_health_app}"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-      start_period: 10s
-
   app:
     build: .
-    # ports:
-    #   - "${PORT:-3000}:${PORT:-3000}"  # Puerto removido - solo accesible via nginx
-    expose:
-      - "3000"  # Expone el puerto solo dentro de la red Docker
+    ports:
+      - "3000:3000"
     environment:
-      # Database configuration
-      - DATABASE_URL=postgresql://${DB_USER:-postgres}:${DB_PASSWORD:-passw}@postgres:5432/${DB_NAME:-mental_health_app}
-      
-      # Application configuration
-      - JWT_SECRET=${JWT_SECRET:-your-secret-key-change-in-production}
-      - PORT=${PORT:-3000}
-      - NODE_ENV=${NODE_ENV:-production}
-      
-      # AI Services configuration
+      - DATABASE_URL=postgresql://postgres:Ho2025@host.docker.internal:5432/mental_health_app
+      - JWT_SECRET=your-secret-key-change-in-production
+      - OPENAI_API_KEY=your-openai-api-key
       - OLLAMA_API_URL=http://ollama:11434
-      - OLLAMA_MODEL=${OLLAMA_MODEL:-qwen2.5:0.5b}
+      - OLLAMA_MODEL=qwen2.5:0.5b
+      - USE_OLLAMA=true
+      - PORT=3000
     depends_on:
-      postgres:
-        condition: service_healthy
-      ollama:
-        condition: service_started
-      ollama-init:
-        condition: service_completed_successfully
+      - ollama
     networks:
       - app-network
-    restart: unless-stopped
 
   ollama:
     image: ollama/ollama:latest
@@ -74,24 +41,7 @@ services:
       - app-network
     restart: "no"
 
-  # Nginx como proxy reverso
-  nginx:
-    image: nginx:alpine
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./ssl:/etc/nginx/ssl:ro
-    depends_on:
-      - app
-    networks:
-      - app-network
-    restart: unless-stopped
-
 volumes:
-  postgres_data:
-    driver: local
   ollama_data:
     driver: local
 
