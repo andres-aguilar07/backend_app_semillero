@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Panel Psicólogo Detalle · REST</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-neutral-200">
+
+  <div class="flex min-h-screen">
+    <!-- Sidebar -->
+    <div id="sidebar"></div>
+  
+    <!-- Contenido -->
+    <main class="flex-1 p-6 md:p-8">
+      <!-- Header -->
+      <div class="flex items-center justify-between mb-6 border-b pb-3">
+        <h2 class="text-xl font-bold">Panel Psicólogo</h2>
+
+        <button
+          onclick="openModal()"
+          class="inline-flex items-center gap-2 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2 shadow">
+          Anexar Datos
+        </button>
+      </div>
+
+      <!-- Grid de tarjetas -->
+      <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Aquí el contenido de detalle -->
+          <div class="bg-white card-shadow rounded-xl p-6">
+          <h3 class="text-lg font-semibold">Información</h3>
+
+          <div class="mt-6 flex flex-col items-center">
+            <div class="w-24 h-24 rounded-full bg-violet-200 grid place-items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-14 h-14 text-violet-700" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 12c2.761 0 5-2.687 5-6s-2.239-6-5-6-5 2.687-5 6 2.239 6 5 6zm0 2c-4.418 0-8 2.239-8 5v3h16v-3c0-2.761-3.582-5-8-5z"/>
+              </svg>
+            </div>
+            <p class="mt-3 text-base font-semibold">Nombre</p>
+          </div>
+
+          <dl class="mt-6 space-y-3 text-sm">
+            <div class="flex justify-between gap-6">
+              <dt class="text-neutral-400">Correo:</dt>
+              <dd class="font-semibold">Correo</dd>
+            </div>
+            <div class="flex justify-between gap-6">
+              <dt class="text-neutral-400">Teléfono:</dt>
+              <dd class="font-semibold">Teléfono</dd>
+            </div>
+            <div class="flex justify-between gap-6">
+              <dt class="text-neutral-400">Carrera:</dt>
+              <dd class="font-semibold">Carrera</dd>
+            </div>
+            <div class="flex justify-between gap-6">
+              <dt class="text-neutral-400">Semestre:</dt>
+              <dd class="font-semibold">Semestre</dd>
+            </div>
+          </dl>
+        </div>
+
+        <!-- Seguimiento -->
+        <div class="bg-white card-shadow rounded-xl p-6">
+          <h3 class="text-lg font-semibold">Seguimiento</h3>
+
+          <div class="mt-5 flex items-center gap-3 text-sm">
+            <span class="text-neutral-400">Estado mental:</span>
+            <span class="font-semibold">Estado mental</span>
+          </div>
+
+          <hr class="my-5">
+
+          <div class="space-y-5 text-sm leading-relaxed">
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dolor tortor, lacinia et velit ac,
+              pulvinar eleifend lacus. Donec sodales leo sed purus cursus, non tempor ligula mollis.
+            </p>
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dolor tortor, lacinia
+              et velit ac, pulvinar eleifend lacus. Donec sodales leo sed purus cursus, non tempor
+              ligula mollis.
+            </p>
+          </div>
+        </div>
+
+        <!-- Documentos -->
+        <div class="bg-white card-shadow rounded-xl p-6">
+          <h3 class="text-lg font-semibold">Documentos</h3>
+
+          <!-- Item PDF -->
+          <div class="mt-8">
+            <div class="flex items-center justify-between gap-4 bg-white border rounded-lg shadow-sm px-4 py-3">
+              <div class="flex items-center gap-3">
+                <!-- Ícono PDF -->
+                <span class="inline-flex items-center justify-center w-10 h-10 rounded-md bg-red-100">
+                  <span class="text-xs font-bold text-red-600">PDF</span>
+                </span>
+                <span class="text-sm">Seguimiento estudiante.pdf</span>
+              </div>
+
+              <button
+                onclick="alert('Descarga simulada (solo front).')"
+                class="rounded-md border px-3 py-1.5 text-sm hover:bg-neutral-50">
+                ⬇️
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+      </section>
+    </main>
+  </div>
+
+  <!-- Modal -->
+  <div id="modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-xl shadow-lg w-full max-w-lg p-6">
+      <div class="flex justify-between items-center border-b pb-3 mb-4">
+        <h3 class="text-lg font-bold">Anexar Datos</h3>
+        <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700 text-xl">&times;</button>
+      </div>
+
+      <form onsubmit="handleSubmit(event)" class="space-y-4">
+        <!-- Campo de texto -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Descripción</label>
+          <textarea class="w-full border rounded-md p-2 mt-1 text-sm" rows="3" placeholder="Escribe aquí..."></textarea>
+        </div>
+
+        <!-- Subir archivo -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Documento (PDF)</label>
+          <input type="file" accept=".pdf" class="mt-1 block w-full text-sm border rounded-md p-2" />
+        </div>
+
+        <!-- Botones -->
+        <div class="flex justify-end gap-3 pt-3 border-t">
+          <button type="button" onclick="closeModal()" class="px-4 py-2 rounded-md border text-sm hover:bg-gray-100">
+            Cancelar
+          </button>
+          <button type="submit" class="px-4 py-2 rounded-md bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700">
+            Guardar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</body>
+
+  <script src="../../js/asidePsicologo.js"></script>
+
+</html>
