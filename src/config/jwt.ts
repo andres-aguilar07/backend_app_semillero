@@ -9,7 +9,7 @@ const JWT_EXPIRE = '24h';
 export interface JwtPayload {
   id: number;
   correo: string;
-  role: 'usuario' | 'psicologo';
+  role: 'usuario' | 'psicologo' | 'admin';
 }
 
 export const generateToken = (payload: JwtPayload): string => {
