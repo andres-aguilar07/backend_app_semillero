@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Psicologos</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-neutral-200">
+  <div class="flex h-screen">
+    <div id="sidebar"></div>
+
+    <main class="flex-1 p-8">
+      <!-- Header con botón Agregar -->
+      <div class="flex items-center justify-between mb-6 border-b pb-3">
+        <h2 class="text-xl font-bold">Psicologos</h2>
+
+        <button onclick="abrirModalAgregar()"
+          class="inline-flex items-center gap-2 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2 shadow">
+          Agregar
+        </button>
+
+      </div>
+
+      <div class="bg-white card-shadow rounded-lg overflow-hidden">
+        <table class="min-w-full text-left border-collapse">
+          <thead class="bg-neutral-100 text-sm font-semibold">
+            <tr>
+              <th class="px-6 py-3">Id</th>
+              <th class="px-6 py-3">Nombre</th>
+              <th class="px-6 py-3">Correo</th>
+              <th class="px-6 py-3 text-center">Acciones</th>
+            </tr>
+          </thead>
+
+          <tbody id="psychologists-body" class="divide-y divide-neutral-200 text-sm">
+            <!-- Aquí se insertarán las filas dinámicamente -->
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal Editar Psicólogo -->
+  <div id="modal-editar" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+    <div class="bg-white rounded-lg shadow-lg w-full max-w-lg p-6 relative">
+      <h3 class="text-lg font-bold mb-4">Editar Psicólogo</h3>
+
+      <!-- Formulario -->
+      <form id="form-editar" class="grid grid-cols-2 gap-4">
+        <input type="hidden" id="edit-id">
+
+        <div>
+          <label class="text-sm text-gray-600">Nombres</label>
+          <input id="edit-nombres" type="text" class="w-full border px-3 py-1 rounded-md">
+        </div>
+        <div>
+          <label class="text-sm text-gray-600">Apellidos</label>
+          <input id="edit-apellidos" type="text" class="w-full border px-3 py-1 rounded-md">
+        </div>
+        <div>
+          <label class="text-sm text-gray-600">Correo</label>
+          <input id="edit-correo" type="email" class="w-full border px-3 py-1 rounded-md">
+        </div>
+        <div>
+          <label class="text-sm text-gray-600">Teléfono</label>
+          <input id="edit-telefono" type="text" class="w-full border px-3 py-1 rounded-md">
+        </div>
+        <div>
+          <label class="text-sm text-gray-600">Edad</label>
+          <input id="edit-edad" type="number" class="w-full border px-3 py-1 rounded-md">
+        </div>
+        <div>
+          <label class="text-sm text-gray-600">Ciudad</label>
+          <input id="edit-ciudad" type="text" class="w-full border px-3 py-1 rounded-md">
+        </div>
+      </form>
+
+      <!-- Botones -->
+      <div class="flex justify-end gap-3 mt-6">
+        <button onclick="cerrarModal()" class="px-4 py-2 bg-gray-400 hover:bg-gray-500 text-white rounded-md">
+          Cancelar
+        </button>
+        <button id="btn-guardar" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md">
+          Guardar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Agregar -->
+  <div id="modal-agregar" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center">
+    <div class="bg-white rounded-lg shadow-lg w-full max-w-lg p-6 relative">
+      <h2 class="text-xl font-bold mb-4">Agregar Psicólogo</h2>
+
+      <div class="grid grid-cols-2 gap-4">
+        <input id="add-nombres" type="text" placeholder="Nombres" class="border rounded px-3 py-2 w-full">
+        <input id="add-apellidos" type="text" placeholder="Apellidos" class="border rounded px-3 py-2 w-full">
+        <input id="add-correo" type="email" placeholder="Correo" class="border rounded px-3 py-2 w-full col-span-2">
+        <input id="add-contrasena" type="password" placeholder="Contraseña"
+          class="border rounded px-3 py-2 w-full col-span-2">
+        <input id="add-telefono" type="text" placeholder="Teléfono" class="border rounded px-3 py-2 w-full">
+        <input id="add-ciudad" type="text" placeholder="Ciudad" class="border rounded px-3 py-2 w-full">
+        <input id="add-edad" type="number" placeholder="Edad" class="border rounded px-3 py-2 w-full">
+        <select id="add-sexo" class="border rounded px-3 py-2 w-full">
+          <option value="">Sexo</option>
+          <option value="M">Masculino</option>
+          <option value="F">Femenino</option>
+        </select>
+      </div>
+
+      <div class="flex justify-end mt-6 gap-2">
+        <button onclick="cerrarModalAgregar()" class="px-4 py-2 bg-gray-400 hover:bg-gray-500 text-white rounded-md">
+          Cancelar
+        </button>
+        <button id="btn-agregar" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md">
+          Guardar
+        </button>
+      </div>
+    </div>
+  </div>
+
+</body>
+
+<script src="../../js/asideAdmin.js"></script>
+<script type="module" src="../../js/psicologos.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+</html>

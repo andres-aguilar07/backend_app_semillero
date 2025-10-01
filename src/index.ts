@@ -14,6 +14,7 @@ import authRoutes from './routes/auth.routes';
 import userRoutes from './routes/user.routes';
 import evaluacionRoutes from './routes/evaluacion.routes';
 import chatRoutes from './routes/chat.routes';
+import adminRoutes from './routes/admin.routes';
 import { runMigrations } from './db/migrate';
 import { seed } from './db/seed';
 import { initializeOllama } from './services/ollama.service';
@@ -45,6 +46,7 @@ app.use('/api/encuestas-respuestas', encuestasRespuestasRoutes)
 app.use('/api/diario', diarioRoutes)
 app.use('/api/opciones-actividades', opcionesActividadesRoutes)
 app.use('/api/registro-actividades', registroActividadesRoutes)
+app.use('/api/admin', adminRoutes);
 
 // Health check endpoint
 app.get('/health', (_: Request, res: Response) => {

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>REST · Login</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="min-h-dvh bg-neutral-200">
+  <main class="min-h-dvh grid place-items-center p-6">
+    <!-- Tarjeta -->
+    <section class="w-full max-w-[640px] rounded-2xl bg-white card-shadow p-10 md:p-12">
+      <!-- Logo -->
+      <div class="text-center mb-8">
+        <div class="p-6 flex justify-center border-b">
+          <img src="../img/logo.jpg" alt="REST Salud Mental" class="h-24 object-contain">
+        </div>
+      </div>
+
+      <!-- Formulario -->
+      <form class="space-y-6" action="#" method="post">
+        <!-- Usuario -->
+        <div>
+          <label for="usuario" class="block text-sm font-medium text-neutral-700 mb-2">Usuario</label>
+          <input id="usuario" name="usuario" type="text" placeholder="Usuario" class="w-full rounded-lg bg-neutral-100 text-neutral-800 placeholder:text-neutral-500
+                   border border-neutral-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200
+                   outline-none px-4 py-3 transition" autocomplete="username" />
+        </div>
+
+        <!-- Contraseña -->
+        <div>
+          <label for="password" class="block text-sm font-medium text-neutral-700 mb-2">Contraseña</label>
+          <input id="password" name="password" type="password" placeholder="Contraseña" class="w-full rounded-lg bg-neutral-100 text-neutral-800 placeholder:text-neutral-500
+                   border border-neutral-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200
+                   outline-none px-4 py-3 transition" autocomplete="current-password" />
+        </div>
+
+        <!-- Botón -->
+        <div class="pt-2">
+          <button type="submit" class="w-full rounded-lg bg-indigo-600 text-white font-semibold py-3
+         hover:bg-indigo-600/90 active:scale-[.99] transition">
+            Ingresar
+          </button>
+
+        </div>
+      </form>
+    </section>
+  </main>
+</body>
+
+<script type="module" src="../js/login.js"></script>
+
+</html>

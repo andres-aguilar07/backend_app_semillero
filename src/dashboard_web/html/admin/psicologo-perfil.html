@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Psicologos · Perfil · REST</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-neutral-200">
+
+  <div class="flex h-screen">
+    <div id="sidebar" class="h-full"></div>
+
+    <!-- Contenido principal -->
+    <main class="flex-1 p-8 overflow-y-auto">
+      <h2 class="text-xl font-bold mb-6 border-b pb-2">Psicologos</h2>
+
+      <!-- Tarjeta de perfil -->
+      <section class="bg-white card-shadow rounded-xl p-6 md:p-8 max-w-5xl mx-auto mb-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12 items-center">
+          <!-- Avatar + nombre -->
+          <div class="flex items-center gap-4">
+            <div class="w-20 h-20 rounded-full bg-violet-200 grid place-items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-violet-700" viewBox="0 0 24 24"
+                fill="currentColor">
+                <path
+                  d="M12 12c2.761 0 5-2.687 5-6s-2.239-6-5-6-5 2.687-5 6 2.239 6 5 6zm0 2c-4.418 0-8 2.239-8 5v3h16v-3c0-2.761-3.582-5-8-5z" />
+              </svg>
+            </div>
+            <div>
+              <p class="text-lg font-semibold" id="psicologo-nombre">Nombre</p>
+            </div>
+          </div>
+
+          <!-- Datos del psicologo -->
+          <div class="col-span-2 grid grid-cols-2 gap-x-16 gap-y-6">
+            <!-- Fila 1 -->
+            <div class="flex items-center gap-3">
+              <span class="text-neutral-400 w-28">Correo:</span>
+              <span class="font-semibold" id="psicologo-correo">Correo</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="text-neutral-400 w-28">Telefono:</span>
+              <span class="font-semibold" id="psicologo-telefono">Telefono</span>
+            </div>
+            <!-- Fila 2 -->
+            <div class="flex items-center gap-3">
+              <span class="text-neutral-400 w-28">Ciudad:</span>
+              <span class="font-semibold" id="psicologo-ciudad">Ciudad</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="text-neutral-400 w-28">Edad:</span>
+              <span class="font-semibold" id="psicologo-edad">edad</span>
+            </div>
+
+          </div>
+      </section>
+    </main>
+  </div>
+
+</body>
+
+<script src="../../js/asideAdmin.js"></script>
+<script type="module" src="../../js/psicologo-perfil.js"></script>
+
+</html>
