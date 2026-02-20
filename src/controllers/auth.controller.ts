@@ -65,7 +65,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
         telefono: userData.telefono,
         edad: userData.edad,
         sexo: userData.sexo,
-        id_rol: 3
+        id_rol: 1
       })
       .returning({
         id: usuarios.id,
