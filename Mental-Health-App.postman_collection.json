@@ -48,7 +48,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"correo\": \"{{$randomEmail}}\",\n  \"contrasena\": \"{{defaultPassword}}\",\n  \"nombres\": \"{{$randomFirstName}}\",\n  \"apellidos\": \"{{$randomLastName}}\"\n}"
+              "raw": "{\n  \"correo\": \"usuario.test@example.com\",\n  \"contrasena\": \"12345678\",\n  \"nombres\": \"Usuario\",\n  \"apellidos\": \"Prueba\"\n}"
             },
             "url": "{{baseUrl}}/api/auth/register"
           }
@@ -67,8 +67,9 @@
                   "const token = json.token || json.accessToken || json.jwt || json.data?.token;",
                   "if (token) pm.collectionVariables.set('token', token);",
                   "",
-                  "const userId = json.user?.id || json.usuario?.id || json.data?.user?.id;",
-                  "if (userId) pm.collectionVariables.set('userId', String(userId));"
+                  "pm.test('Token presente', function () {",
+                  "  pm.expect(token).to.be.ok;",
+                  "});"
                 ]
               }
             }
@@ -83,7 +84,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"correo\": \"{{loginEmail}}\",\n  \"contrasena\": \"{{loginPassword}}\"\n}"
+              "raw": "{\n  \"correo\": \"admin@test.com\",\n  \"contrasena\": \"12345678\"\n}"
             },
             "url": "{{baseUrl}}/api/auth/login"
           }
@@ -116,25 +117,11 @@
                 "value": "Bearer {{token}}"
               }
             ],
-            "url": "{{baseUrl}}/api/users?page={{page}}&limit={{limit}}&search={{search}}"
+            "url": "{{baseUrl}}/api/users?page=1&limit=10&search="
           }
         },
         {
           "name": "POST /api/users",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "let json = {};",
-                  "try { json = pm.response.json(); } catch (e) {}",
-                  "const createdId = json.id || json.user?.id || json.usuario?.id || json.data?.id;",
-                  "if (createdId) pm.collectionVariables.set('userId', String(createdId));"
-                ]
-              }
-            }
-          ],
           "request": {
             "method": "POST",
             "header": [
@@ -149,7 +136,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"nombres\": \"{{$randomFirstName}}\",\n  \"apellidos\": \"{{$randomLastName}}\",\n  \"correo\": \"{{$randomEmail}}\",\n  \"contrasena\": \"{{defaultPassword}}\",\n  \"id_rol\": 1,\n  \"ciudad\": \"Barranquilla\",\n  \"semestre_actual\": \"6\",\n  \"telefono\": \"3001234567\",\n  \"edad\": 20,\n  \"sexo\": \"M\",\n  \"fecha_nacimiento\": \"2005-01-15\",\n  \"idioma\": \"es\"\n}"
+              "raw": "{\n  \"nombres\": \"Juan\",\n  \"apellidos\": \"Perez\",\n  \"correo\": \"juan.perez@example.com\",\n  \"contrasena\": \"12345678\",\n  \"id_rol\": 1,\n  \"ciudad\": \"Barranquilla\",\n  \"semestre_actual\": \"6\",\n  \"telefono\": \"3001234567\",\n  \"edad\": 20,\n  \"sexo\": \"M\",\n  \"fecha_nacimiento\": \"2005-01-15\",\n  \"idioma\": \"es\"\n}"
             },
             "url": "{{baseUrl}}/api/users"
           }
@@ -164,7 +151,7 @@
                 "value": "Bearer {{token}}"
               }
             ],
-            "url": "{{baseUrl}}/api/users/{{userId}}"
+            "url": "{{baseUrl}}/api/users/1"
           }
         },
         {
@@ -183,9 +170,9 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"nombres\": \"Nombre Actualizado\",\n  \"apellidos\": \"Apellido Actualizado\",\n  \"correo\": \"{{$randomEmail}}\",\n  \"contrasena\": \"{{defaultPassword}}\",\n  \"id_rol\": 1,\n  \"ciudad\": \"Barranquilla\",\n  \"semestre_actual\": \"7\",\n  \"telefono\": \"3001112233\",\n  \"edad\": 21,\n  \"sexo\": \"F\",\n  \"fecha_nacimiento\": \"2004-08-01\",\n  \"idioma\": \"es\",\n  \"especialidad_psicologo\": \"\",\n  \"is_active\": true\n}"
+              "raw": "{\n  \"nombres\": \"Nombre Actualizado\",\n  \"apellidos\": \"Apellido Actualizado\",\n  \"correo\": \"actualizado@example.com\",\n  \"contrasena\": \"12345678\",\n  \"id_rol\": 1,\n  \"ciudad\": \"Barranquilla\",\n  \"semestre_actual\": \"7\",\n  \"telefono\": \"3001112233\",\n  \"edad\": 21,\n  \"sexo\": \"F\",\n  \"fecha_nacimiento\": \"2004-08-01\",\n  \"idioma\": \"es\",\n  \"especialidad_psicologo\": \"\",\n  \"is_active\": true\n}"
             },
-            "url": "{{baseUrl}}/api/users/{{userId}}"
+            "url": "{{baseUrl}}/api/users/1"
           }
         },
         {
@@ -206,7 +193,7 @@
               "mode": "raw",
               "raw": "{\n  \"ciudad\": \"Soledad\",\n  \"telefono\": \"3000000000\"\n}"
             },
-            "url": "{{baseUrl}}/api/users/{{userId}}"
+            "url": "{{baseUrl}}/api/users/1"
           }
         },
         {
@@ -219,7 +206,7 @@
                 "value": "Bearer {{token}}"
               }
             ],
-            "url": "{{baseUrl}}/api/users/{{userId}}"
+            "url": "{{baseUrl}}/api/users/1"
           }
         }
       ]
@@ -229,20 +216,6 @@
       "item": [
         {
           "name": "POST /api/admin/addPsychologist",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "let json = {};",
-                  "try { json = pm.response.json(); } catch (e) {}",
-                  "const id = json.id || json.user?.id || json.psychologist?.id || json.data?.id;",
-                  "if (id) pm.collectionVariables.set('psychologistId', String(id));"
-                ]
-              }
-            }
-          ],
           "request": {
             "method": "POST",
             "header": [
@@ -257,7 +230,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"nombres\": \"{{$randomFirstName}}\",\n  \"apellidos\": \"{{$randomLastName}}\",\n  \"correo\": \"{{$randomEmail}}\",\n  \"contrasena\": \"{{defaultPassword}}\",\n  \"telefono\": \"3001231234\",\n  \"edad\": 30,\n  \"sexo\": \"F\",\n  \"id_rol\": 2\n}"
+              "raw": "{\n  \"nombres\": \"Ana\",\n  \"apellidos\": \"Gomez\",\n  \"correo\": \"ana.gomez@example.com\",\n  \"contrasena\": \"12345678\",\n  \"telefono\": \"3001231234\",\n  \"edad\": 30,\n  \"sexo\": \"F\",\n  \"id_rol\": 2\n}"
             },
             "url": "{{baseUrl}}/api/admin/addPsychologist"
           }
@@ -298,7 +271,7 @@
                 "value": "Bearer {{token}}"
               }
             ],
-            "url": "{{baseUrl}}/api/admin/students/{{studentId}}"
+            "url": "{{baseUrl}}/api/admin/students/1"
           }
         },
         {
@@ -324,7 +297,7 @@
                 "value": "Bearer {{token}}"
               }
             ],
-            "url": "{{baseUrl}}/api/admin/psychologists/{{psychologistId}}"
+            "url": "{{baseUrl}}/api/admin/psychologists/1"
           }
         },
         {
@@ -343,9 +316,9 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"nombres\": \"Psicologo\",\n  \"apellidos\": \"Actualizado\",\n  \"correo\": \"{{$randomEmail}}\",\n  \"telefono\": \"3009991122\",\n  \"edad\": 31,\n  \"sexo\": \"M\"\n}"
+              "raw": "{\n  \"nombres\": \"Psicologo\",\n  \"apellidos\": \"Actualizado\",\n  \"correo\": \"psicologo.actualizado@example.com\",\n  \"telefono\": \"3009991122\",\n  \"edad\": 31,\n  \"sexo\": \"M\"\n}"
             },
-            "url": "{{baseUrl}}/api/admin/psychologists/{{psychologistId}}"
+            "url": "{{baseUrl}}/api/admin/psychologists/1"
           }
         },
         {
@@ -358,7 +331,7 @@
                 "value": "Bearer {{token}}"
               }
             ],
-            "url": "{{baseUrl}}/api/admin/psychologists/{{psychologistId}}"
+            "url": "{{baseUrl}}/api/admin/psychologists/1"
           }
         }
       ]
@@ -376,20 +349,6 @@
         },
         {
           "name": "POST /api/evaluaciones",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "let json = {};",
-                  "try { json = pm.response.json(); } catch (e) {}",
-                  "const id = json.id || json.evaluacion?.id || json.data?.id;",
-                  "if (id) pm.collectionVariables.set('evaluacionId', String(id));"
-                ]
-              }
-            }
-          ],
           "request": {
             "method": "POST",
             "header": [
@@ -404,7 +363,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"usuario_id\": {{userId}},\n  \"puntaje_total\": 50,\n  \"estado_semaforo\": \"amarillo\",\n  \"observaciones\": \"Observacion de prueba\"\n}"
+              "raw": "{\n  \"usuario_id\": 1,\n  \"puntaje_total\": 50,\n  \"estado_semaforo\": \"amarillo\",\n  \"observaciones\": \"Observacion de prueba\"\n}"
             },
             "url": "{{baseUrl}}/api/evaluaciones"
           }
@@ -419,7 +378,7 @@
                 "value": "Bearer {{token}}"
               }
             ],
-            "url": "{{baseUrl}}/api/evaluaciones?page={{page}}&limit={{limit}}"
+            "url": "{{baseUrl}}/api/evaluaciones?page=1&limit=10"
           }
         },
         {
@@ -432,7 +391,7 @@
                 "value": "Bearer {{token}}"
               }
             ],
-            "url": "{{baseUrl}}/api/evaluaciones/{{evaluacionId}}"
+            "url": "{{baseUrl}}/api/evaluaciones/1"
           }
         }
       ]
@@ -450,7 +409,7 @@
                 "value": "Bearer {{token}}"
               }
             ],
-            "url": "{{baseUrl}}/api/encuestas?page={{page}}&limit={{limit}}"
+            "url": "{{baseUrl}}/api/encuestas?page=1&limit=10"
           }
         },
         {
@@ -463,25 +422,11 @@
                 "value": "Bearer {{token}}"
               }
             ],
-            "url": "{{baseUrl}}/api/encuestas/{{encuestaId}}"
+            "url": "{{baseUrl}}/api/encuestas/1"
           }
         },
         {
           "name": "POST /api/encuestas",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "let json = {};",
-                  "try { json = pm.response.json(); } catch (e) {}",
-                  "const id = json.id || json.encuesta?.id || json.data?.id;",
-                  "if (id) pm.collectionVariables.set('encuestaId', String(id));"
-                ]
-              }
-            }
-          ],
           "request": {
             "method": "POST",
             "header": [
@@ -496,7 +441,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"codigo\": \"ENC-{{$timestamp}}\",\n  \"titulo\": \"Encuesta de bienestar\",\n  \"opciones\": {\n    \"preguntas\": [\n      \"Como te sientes hoy?\"\n    ]\n  }\n}"
+              "raw": "{\n  \"codigo\": \"ENC-001\",\n  \"titulo\": \"Encuesta de bienestar\",\n  \"opciones\": {\n    \"preguntas\": [\n      \"Como te sientes hoy?\"\n    ]\n  }\n}"
             },
             "url": "{{baseUrl}}/api/encuestas"
           }
@@ -517,9 +462,9 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"codigo\": \"ENC-UPD-{{$timestamp}}\",\n  \"titulo\": \"Encuesta actualizada\",\n  \"opciones\": {\n    \"version\": 2\n  }\n}"
+              "raw": "{\n  \"codigo\": \"ENC-UPD-001\",\n  \"titulo\": \"Encuesta actualizada\",\n  \"opciones\": {\n    \"version\": 2\n  }\n}"
             },
-            "url": "{{baseUrl}}/api/encuestas/{{encuestaId}}"
+            "url": "{{baseUrl}}/api/encuestas/1"
           }
         },
         {
@@ -540,7 +485,7 @@
               "mode": "raw",
               "raw": "{\n  \"titulo\": \"Titulo parcial\"\n}"
             },
-            "url": "{{baseUrl}}/api/encuestas/{{encuestaId}}"
+            "url": "{{baseUrl}}/api/encuestas/1"
           }
         },
         {
@@ -553,7 +498,7 @@
                 "value": "Bearer {{token}}"
               }
             ],
-            "url": "{{baseUrl}}/api/encuestas/{{encuestaId}}"
+            "url": "{{baseUrl}}/api/encuestas/1"
           }
         }
       ]
@@ -571,7 +516,7 @@
                 "value": "Bearer {{token}}"
               }
             ],
-            "url": "{{baseUrl}}/api/encuestas-respuestas?usuario_id={{userId}}&encuesta_id={{encuestaId}}&page={{page}}&limit={{limit}}"
+            "url": "{{baseUrl}}/api/encuestas-respuestas?usuario_id=1&encuesta_id=1&page=1&limit=10"
           }
         },
         {
@@ -584,25 +529,11 @@
                 "value": "Bearer {{token}}"
               }
             ],
-            "url": "{{baseUrl}}/api/encuestas-respuestas/{{encuestaRespuestaId}}"
+            "url": "{{baseUrl}}/api/encuestas-respuestas/1"
           }
         },
         {
           "name": "POST /api/encuestas-respuestas",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "let json = {};",
-                  "try { json = pm.response.json(); } catch (e) {}",
-                  "const id = json.id || json.respuesta?.id || json.data?.id;",
-                  "if (id) pm.collectionVariables.set('encuestaRespuestaId', String(id));"
-                ]
-              }
-            }
-          ],
           "request": {
             "method": "POST",
             "header": [
@@ -617,7 +548,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"usuario_id\": {{userId}},\n  \"encuesta_id\": {{encuestaId}},\n  \"respuesta\": {\n    \"valor\": \"bien\"\n  }\n}"
+              "raw": "{\n  \"usuario_id\": 1,\n  \"encuesta_id\": 1,\n  \"respuesta\": {\n    \"valor\": \"bien\"\n  }\n}"
             },
             "url": "{{baseUrl}}/api/encuestas-respuestas"
           }
@@ -638,9 +569,9 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"usuario_id\": {{userId}},\n  \"encuesta_id\": {{encuestaId}},\n  \"respuesta\": {\n    \"valor\": \"actualizado\"\n  }\n}"
+              "raw": "{\n  \"usuario_id\": 1,\n  \"encuesta_id\": 1,\n  \"respuesta\": {\n    \"valor\": \"actualizado\"\n  }\n}"
             },
-            "url": "{{baseUrl}}/api/encuestas-respuestas/{{encuestaRespuestaId}}"
+            "url": "{{baseUrl}}/api/encuestas-respuestas/1"
           }
         },
         {
@@ -661,7 +592,7 @@
               "mode": "raw",
               "raw": "{\n  \"respuesta\": {\n    \"nota\": \"parcial\"\n  }\n}"
             },
-            "url": "{{baseUrl}}/api/encuestas-respuestas/{{encuestaRespuestaId}}"
+            "url": "{{baseUrl}}/api/encuestas-respuestas/1"
           }
         },
         {
@@ -674,7 +605,7 @@
                 "value": "Bearer {{token}}"
               }
             ],
-            "url": "{{baseUrl}}/api/encuestas-respuestas/{{encuestaRespuestaId}}"
+            "url": "{{baseUrl}}/api/encuestas-respuestas/1"
           }
         }
       ]
@@ -705,25 +636,11 @@
                 "value": "Bearer {{token}}"
               }
             ],
-            "url": "{{baseUrl}}/api/chats/{{chatId}}"
+            "url": "{{baseUrl}}/api/chats/1"
           }
         },
         {
           "name": "POST /api/chats",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "let json = {};",
-                  "try { json = pm.response.json(); } catch (e) {}",
-                  "const id = json.id || json.chat?.id || json.data?.id;",
-                  "if (id) pm.collectionVariables.set('chatId', String(id));"
-                ]
-              }
-            }
-          ],
           "request": {
             "method": "POST",
             "header": [
@@ -738,7 +655,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"estudiante_id\": {{userId}},\n  \"psicologo_id\": {{psychologistId}},\n  \"is_active\": true,\n  \"isSendByAi\": false\n}"
+              "raw": "{\n  \"estudiante_id\": 1,\n  \"psicologo_id\": 1,\n  \"is_active\": true,\n  \"isSendByAi\": false\n}"
             },
             "url": "{{baseUrl}}/api/chats"
           }
@@ -759,9 +676,9 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"estudiante_id\": {{userId}},\n  \"psicologo_id\": {{psychologistId}},\n  \"finalizado_en\": \"{{$isoTimestamp}}\",\n  \"is_active\": true,\n  \"isSendByAi\": false\n}"
+              "raw": "{\n  \"estudiante_id\": 1,\n  \"psicologo_id\": 1,\n  \"finalizado_en\": \"2026-01-01T00:00:00.000Z\",\n  \"is_active\": true,\n  \"isSendByAi\": false\n}"
             },
-            "url": "{{baseUrl}}/api/chats/{{chatId}}"
+            "url": "{{baseUrl}}/api/chats/1"
           }
         },
         {
@@ -782,7 +699,7 @@
               "mode": "raw",
               "raw": "{\n  \"is_active\": false\n}"
             },
-            "url": "{{baseUrl}}/api/chats/{{chatId}}"
+            "url": "{{baseUrl}}/api/chats/1"
           }
         },
         {
@@ -795,7 +712,7 @@
                 "value": "Bearer {{token}}"
               }
             ],
-            "url": "{{baseUrl}}/api/chats/{{chatId}}"
+            "url": "{{baseUrl}}/api/chats/1"
           }
         },
         {
@@ -811,7 +728,7 @@
                     "value": "Bearer {{token}}"
                   }
                 ],
-                "url": "{{baseUrl}}/api/chats/{{chatId}}/mensajes?page={{page}}&limit={{limit}}"
+                "url": "{{baseUrl}}/api/chats/1/mensajes?page=1&limit=10"
               }
             },
             {
@@ -824,25 +741,11 @@
                     "value": "Bearer {{token}}"
                   }
                 ],
-                "url": "{{baseUrl}}/api/chats/{{chatId}}/mensajes/{{mensajeId}}"
+                "url": "{{baseUrl}}/api/chats/1/mensajes/1"
               }
             },
             {
               "name": "POST /api/chats/:chatId/mensajes",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "type": "text/javascript",
-                    "exec": [
-                      "let json = {};",
-                      "try { json = pm.response.json(); } catch (e) {}",
-                      "const id = json.id || json.mensaje?.id || json.data?.id;",
-                      "if (id) pm.collectionVariables.set('mensajeId', String(id));"
-                    ]
-                  }
-                }
-              ],
               "request": {
                 "method": "POST",
                 "header": [
@@ -857,9 +760,9 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"mensaje\": \"Hola, este es un mensaje de prueba\",\n  \"usuario_id\": {{userId}}\n}"
+                  "raw": "{\n  \"mensaje\": \"Hola, este es un mensaje de prueba\",\n  \"usuario_id\": 1\n}"
                 },
-                "url": "{{baseUrl}}/api/chats/{{chatId}}/mensajes"
+                "url": "{{baseUrl}}/api/chats/1/mensajes"
               }
             },
             {
@@ -880,7 +783,7 @@
                   "mode": "raw",
                   "raw": "{\n  \"mensaje\": \"Mensaje actualizado\"\n}"
                 },
-                "url": "{{baseUrl}}/api/chats/{{chatId}}/mensajes/{{mensajeId}}"
+                "url": "{{baseUrl}}/api/chats/1/mensajes/1"
               }
             },
             {
@@ -901,7 +804,7 @@
                   "mode": "raw",
                   "raw": "{\n  \"mensaje\": \"Cambio parcial\"\n}"
                 },
-                "url": "{{baseUrl}}/api/chats/{{chatId}}/mensajes/{{mensajeId}}"
+                "url": "{{baseUrl}}/api/chats/1/mensajes/1"
               }
             },
             {
@@ -914,7 +817,7 @@
                     "value": "Bearer {{token}}"
                   }
                 ],
-                "url": "{{baseUrl}}/api/chats/{{chatId}}/mensajes/{{mensajeId}}"
+                "url": "{{baseUrl}}/api/chats/1/mensajes/1"
               }
             }
           ]
@@ -934,7 +837,7 @@
                 "value": "Bearer {{token}}"
               }
             ],
-            "url": "{{baseUrl}}/api/diario?page={{page}}&limit={{limit}}"
+            "url": "{{baseUrl}}/api/diario?page=1&limit=10"
           }
         },
         {
@@ -947,25 +850,11 @@
                 "value": "Bearer {{token}}"
               }
             ],
-            "url": "{{baseUrl}}/api/diario/{{diarioId}}"
+            "url": "{{baseUrl}}/api/diario/1"
           }
         },
         {
           "name": "POST /api/diario",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "let json = {};",
-                  "try { json = pm.response.json(); } catch (e) {}",
-                  "const id = json.id || json.diario?.id || json.entrada?.id || json.data?.id;",
-                  "if (id) pm.collectionVariables.set('diarioId', String(id));"
-                ]
-              }
-            }
-          ],
           "request": {
             "method": "POST",
             "header": [
@@ -980,7 +869,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"titulo\": \"Entrada de prueba\",\n  \"contenido\": \"Contenido de prueba\",\n  \"fecha\": \"{{$isoTimestamp}}\"\n}"
+              "raw": "{\n  \"titulo\": \"Entrada de prueba\",\n  \"contenido\": \"Contenido de prueba\",\n  \"fecha\": \"2026-01-01T00:00:00.000Z\"\n}"
             },
             "url": "{{baseUrl}}/api/diario"
           }
@@ -1001,9 +890,9 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"titulo\": \"Entrada completa actualizada\",\n  \"contenido\": \"Contenido actualizado\",\n  \"fecha\": \"{{$isoTimestamp}}\"\n}"
+              "raw": "{\n  \"titulo\": \"Entrada completa actualizada\",\n  \"contenido\": \"Contenido actualizado\",\n  \"fecha\": \"2026-01-01T00:00:00.000Z\"\n}"
             },
-            "url": "{{baseUrl}}/api/diario/{{diarioId}}"
+            "url": "{{baseUrl}}/api/diario/1"
           }
         },
         {
@@ -1024,7 +913,7 @@
               "mode": "raw",
               "raw": "{\n  \"contenido\": \"Ajuste parcial\"\n}"
             },
-            "url": "{{baseUrl}}/api/diario/{{diarioId}}"
+            "url": "{{baseUrl}}/api/diario/1"
           }
         },
         {
@@ -1037,7 +926,7 @@
                 "value": "Bearer {{token}}"
               }
             ],
-            "url": "{{baseUrl}}/api/diario/{{diarioId}}"
+            "url": "{{baseUrl}}/api/diario/1"
           }
         }
       ]
@@ -1068,25 +957,11 @@
                 "value": "Bearer {{token}}"
               }
             ],
-            "url": "{{baseUrl}}/api/opciones-actividades/{{opcionActividadId}}"
+            "url": "{{baseUrl}}/api/opciones-actividades/1"
           }
         },
         {
           "name": "POST /api/opciones-actividades",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "let json = {};",
-                  "try { json = pm.response.json(); } catch (e) {}",
-                  "const id = json.id || json.opcion?.id || json.data?.id;",
-                  "if (id) pm.collectionVariables.set('opcionActividadId', String(id));"
-                ]
-              }
-            }
-          ],
           "request": {
             "method": "POST",
             "header": [
@@ -1124,7 +999,7 @@
               "mode": "raw",
               "raw": "{\n  \"nombre\": \"Actividad actualizada\",\n  \"descripcion\": \"Descripcion nueva\",\n  \"url_imagen\": \"https://example.com/new-image.jpg\"\n}"
             },
-            "url": "{{baseUrl}}/api/opciones-actividades/{{opcionActividadId}}"
+            "url": "{{baseUrl}}/api/opciones-actividades/1"
           }
         },
         {
@@ -1145,7 +1020,7 @@
               "mode": "raw",
               "raw": "{\n  \"descripcion\": \"Cambio parcial\"\n}"
             },
-            "url": "{{baseUrl}}/api/opciones-actividades/{{opcionActividadId}}"
+            "url": "{{baseUrl}}/api/opciones-actividades/1"
           }
         },
         {
@@ -1158,7 +1033,7 @@
                 "value": "Bearer {{token}}"
               }
             ],
-            "url": "{{baseUrl}}/api/opciones-actividades/{{opcionActividadId}}"
+            "url": "{{baseUrl}}/api/opciones-actividades/1"
           }
         }
       ]
@@ -1176,7 +1051,7 @@
                 "value": "Bearer {{token}}"
               }
             ],
-            "url": "{{baseUrl}}/api/registro-actividades?page={{page}}&limit={{limit}}&opcion_id={{opcionActividadId}}"
+            "url": "{{baseUrl}}/api/registro-actividades?page=1&limit=10&opcion_id=1"
           }
         },
         {
@@ -1189,25 +1064,11 @@
                 "value": "Bearer {{token}}"
               }
             ],
-            "url": "{{baseUrl}}/api/registro-actividades/{{registroActividadId}}"
+            "url": "{{baseUrl}}/api/registro-actividades/1"
           }
         },
         {
           "name": "POST /api/registro-actividades",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "let json = {};",
-                  "try { json = pm.response.json(); } catch (e) {}",
-                  "const id = json.id || json.registro?.id || json.data?.id;",
-                  "if (id) pm.collectionVariables.set('registroActividadId', String(id));"
-                ]
-              }
-            }
-          ],
           "request": {
             "method": "POST",
             "header": [
@@ -1222,7 +1083,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"opcion_id\": {{opcionActividadId}},\n  \"vencimiento\": \"{{$isoTimestamp}}\",\n  \"fecha\": \"{{$isoTimestamp}}\",\n  \"observaciones\": \"Observaciones de prueba\"\n}"
+              "raw": "{\n  \"opcion_id\": 1,\n  \"vencimiento\": \"2026-01-01T00:00:00.000Z\",\n  \"fecha\": \"2026-01-01T00:00:00.000Z\",\n  \"observaciones\": \"Observaciones de prueba\"\n}"
             },
             "url": "{{baseUrl}}/api/registro-actividades"
           }
@@ -1243,9 +1104,9 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"opcion_id\": {{opcionActividadId}},\n  \"vencimiento\": \"{{$isoTimestamp}}\",\n  \"fecha\": \"{{$isoTimestamp}}\",\n  \"observaciones\": \"Registro actualizado\"\n}"
+              "raw": "{\n  \"opcion_id\": 1,\n  \"vencimiento\": \"2026-01-01T00:00:00.000Z\",\n  \"fecha\": \"2026-01-01T00:00:00.000Z\",\n  \"observaciones\": \"Registro actualizado\"\n}"
             },
-            "url": "{{baseUrl}}/api/registro-actividades/{{registroActividadId}}"
+            "url": "{{baseUrl}}/api/registro-actividades/1"
           }
         },
         {
@@ -1266,7 +1127,7 @@
               "mode": "raw",
               "raw": "{\n  \"observaciones\": \"Actualizacion parcial\"\n}"
             },
-            "url": "{{baseUrl}}/api/registro-actividades/{{registroActividadId}}"
+            "url": "{{baseUrl}}/api/registro-actividades/1"
           }
         },
         {
@@ -1279,7 +1140,7 @@
                 "value": "Bearer {{token}}"
               }
             ],
-            "url": "{{baseUrl}}/api/registro-actividades/{{registroActividadId}}"
+            "url": "{{baseUrl}}/api/registro-actividades/1"
           }
         }
       ]
@@ -1333,91 +1194,6 @@
     {
       "key": "token",
       "value": "",
-      "type": "string"
-    },
-    {
-      "key": "loginEmail",
-      "value": "admin@test.com",
-      "type": "string"
-    },
-    {
-      "key": "loginPassword",
-      "value": "12345678",
-      "type": "string"
-    },
-    {
-      "key": "defaultPassword",
-      "value": "12345678",
-      "type": "string"
-    },
-    {
-      "key": "page",
-      "value": "1",
-      "type": "string"
-    },
-    {
-      "key": "limit",
-      "value": "10",
-      "type": "string"
-    },
-    {
-      "key": "search",
-      "value": "",
-      "type": "string"
-    },
-    {
-      "key": "userId",
-      "value": "1",
-      "type": "string"
-    },
-    {
-      "key": "studentId",
-      "value": "1",
-      "type": "string"
-    },
-    {
-      "key": "psychologistId",
-      "value": "1",
-      "type": "string"
-    },
-    {
-      "key": "evaluacionId",
-      "value": "1",
-      "type": "string"
-    },
-    {
-      "key": "encuestaId",
-      "value": "1",
-      "type": "string"
-    },
-    {
-      "key": "encuestaRespuestaId",
-      "value": "1",
-      "type": "string"
-    },
-    {
-      "key": "chatId",
-      "value": "1",
-      "type": "string"
-    },
-    {
-      "key": "mensajeId",
-      "value": "1",
-      "type": "string"
-    },
-    {
-      "key": "diarioId",
-      "value": "1",
-      "type": "string"
-    },
-    {
-      "key": "opcionActividadId",
-      "value": "1",
-      "type": "string"
-    },
-    {
-      "key": "registroActividadId",
-      "value": "1",
       "type": "string"
     }
   ]
