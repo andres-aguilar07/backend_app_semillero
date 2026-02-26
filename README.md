@@ -8,7 +8,6 @@ Aplicación de evaluación de salud mental con sistema de semáforo (verde, amar
 - Integración con OpenAI para análisis de respuestas
 - Persistencia de datos con PostgreSQL y Drizzle ORM
 - Implementado en TypeScript y Express.js
-- Proxy inverso con Nginx y SSL/TLS
 - Dockerizado para fácil despliegue
 
 ## Requisitos
@@ -17,9 +16,6 @@ Aplicación de evaluación de salud mental con sistema de semáforo (verde, amar
 ## Estructura
 ```
 ├── drizzle/                 # Migraciones de Drizzle ORM
-├── ssl/                     # Certificados SSL para desarrollo
-│   ├── server.crt          # Certificado SSL
-│   └── server.key          # Clave privada SSL
 ├── src/
 │   ├── config/              # Configuración de la aplicación (JWT)
 │   ├── controllers/         # Controladores de API
@@ -35,14 +31,14 @@ Aplicación de evaluación de salud mental con sistema de semáforo (verde, amar
 ├── Dockerfile               # Configuración de Docker
 ├── docker-compose.yml       # Configuración de Docker Compose
 ├── drizzle.config.ts        # Configuración de Drizzle ORM
-├── nginx.conf               # Configuración del proxy inverso
 └── package.json             # Dependencias
 ```
 
 ## Notas clave
 - Docker Compose levanta App (NODE), Postgres y Ollama.
-- Variables en `docker-compose.yml` (también usa `.env`).
-- Puertos: Nginx 80/443, API 3000, Ollama 11434, Postgres 5432.
+- Al iniciar el contenedor de `app`, se ejecutan migraciones automáticamente (`node dist/db/migrate.js`).
+- Variables en `docker-compose.yml` (también puedes usar `.env`).
+- Puertos: API 3000, Ollama 11434, Postgres 5433 (host) -> 5432 (contenedor).
 
 ## Guía completa
-Consulta `docs.md` para el setup de nginx, arranque, migraciones (npm/pnpm), Ollama y troubleshooting. 
+Consulta `docs.md` para arranque, migraciones, Ollama, pruebas rápidas de API y troubleshooting.
