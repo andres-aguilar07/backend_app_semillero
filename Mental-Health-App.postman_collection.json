@@ -1,0 +1,1424 @@
+{
+  "info": {
+    "name": "Mental Health App API",
+    "_postman_id": "f5f765f2-7d8f-43d3-95c7-8e4522d95f10",
+    "description": "Coleccion generada desde api.md con variables dinamicas para token, baseUrl e IDs.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "if (!pm.collectionVariables.get('baseUrl')) {",
+          "  pm.collectionVariables.set('baseUrl', 'http://190.143.117.179/');",
+          "}"
+        ]
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "Salud",
+      "item": [
+        {
+          "name": "GET /health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/health",
+            "description": "Verificacion de estado del servidor."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "POST /api/auth/register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"correo\": \"{{$randomEmail}}\",\n  \"contrasena\": \"{{defaultPassword}}\",\n  \"nombres\": \"{{$randomFirstName}}\",\n  \"apellidos\": \"{{$randomLastName}}\"\n}"
+            },
+            "url": "{{baseUrl}}/api/auth/register"
+          }
+        },
+        {
+          "name": "POST /api/auth/login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "let json = {};",
+                  "try { json = pm.response.json(); } catch (e) {}",
+                  "",
+                  "const token = json.token || json.accessToken || json.jwt || json.data?.token;",
+                  "if (token) pm.collectionVariables.set('token', token);",
+                  "",
+                  "const userId = json.user?.id || json.usuario?.id || json.data?.user?.id;",
+                  "if (userId) pm.collectionVariables.set('userId', String(userId));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"correo\": \"{{loginEmail}}\",\n  \"contrasena\": \"{{loginPassword}}\"\n}"
+            },
+            "url": "{{baseUrl}}/api/auth/login"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Usuarios",
+      "item": [
+        {
+          "name": "GET /api/users/profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/users/profile"
+          }
+        },
+        {
+          "name": "GET /api/users",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/users?page={{page}}&limit={{limit}}&search={{search}}"
+          }
+        },
+        {
+          "name": "POST /api/users",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "let json = {};",
+                  "try { json = pm.response.json(); } catch (e) {}",
+                  "const createdId = json.id || json.user?.id || json.usuario?.id || json.data?.id;",
+                  "if (createdId) pm.collectionVariables.set('userId', String(createdId));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombres\": \"{{$randomFirstName}}\",\n  \"apellidos\": \"{{$randomLastName}}\",\n  \"correo\": \"{{$randomEmail}}\",\n  \"contrasena\": \"{{defaultPassword}}\",\n  \"id_rol\": 1,\n  \"ciudad\": \"Barranquilla\",\n  \"semestre_actual\": \"6\",\n  \"telefono\": \"3001234567\",\n  \"edad\": 20,\n  \"sexo\": \"M\",\n  \"fecha_nacimiento\": \"2005-01-15\",\n  \"idioma\": \"es\"\n}"
+            },
+            "url": "{{baseUrl}}/api/users"
+          }
+        },
+        {
+          "name": "GET /api/users/:id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/users/{{userId}}"
+          }
+        },
+        {
+          "name": "PUT /api/users/:id",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombres\": \"Nombre Actualizado\",\n  \"apellidos\": \"Apellido Actualizado\",\n  \"correo\": \"{{$randomEmail}}\",\n  \"contrasena\": \"{{defaultPassword}}\",\n  \"id_rol\": 1,\n  \"ciudad\": \"Barranquilla\",\n  \"semestre_actual\": \"7\",\n  \"telefono\": \"3001112233\",\n  \"edad\": 21,\n  \"sexo\": \"F\",\n  \"fecha_nacimiento\": \"2004-08-01\",\n  \"idioma\": \"es\",\n  \"especialidad_psicologo\": \"\",\n  \"is_active\": true\n}"
+            },
+            "url": "{{baseUrl}}/api/users/{{userId}}"
+          }
+        },
+        {
+          "name": "PATCH /api/users/:id",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ciudad\": \"Soledad\",\n  \"telefono\": \"3000000000\"\n}"
+            },
+            "url": "{{baseUrl}}/api/users/{{userId}}"
+          }
+        },
+        {
+          "name": "DELETE /api/users/:id",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/users/{{userId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Administrador",
+      "item": [
+        {
+          "name": "POST /api/admin/addPsychologist",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "let json = {};",
+                  "try { json = pm.response.json(); } catch (e) {}",
+                  "const id = json.id || json.user?.id || json.psychologist?.id || json.data?.id;",
+                  "if (id) pm.collectionVariables.set('psychologistId', String(id));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombres\": \"{{$randomFirstName}}\",\n  \"apellidos\": \"{{$randomLastName}}\",\n  \"correo\": \"{{$randomEmail}}\",\n  \"contrasena\": \"{{defaultPassword}}\",\n  \"telefono\": \"3001231234\",\n  \"edad\": 30,\n  \"sexo\": \"F\",\n  \"id_rol\": 2\n}"
+            },
+            "url": "{{baseUrl}}/api/admin/addPsychologist"
+          }
+        },
+        {
+          "name": "GET /api/admin/count",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/admin/count"
+          }
+        },
+        {
+          "name": "GET /api/admin/students",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/admin/students"
+          }
+        },
+        {
+          "name": "GET /api/admin/students/:id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/admin/students/{{studentId}}"
+          }
+        },
+        {
+          "name": "GET /api/admin/psychologists",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/admin/psychologists"
+          }
+        },
+        {
+          "name": "GET /api/admin/psychologists/:id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/admin/psychologists/{{psychologistId}}"
+          }
+        },
+        {
+          "name": "PUT /api/admin/psychologists/:id",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombres\": \"Psicologo\",\n  \"apellidos\": \"Actualizado\",\n  \"correo\": \"{{$randomEmail}}\",\n  \"telefono\": \"3009991122\",\n  \"edad\": 31,\n  \"sexo\": \"M\"\n}"
+            },
+            "url": "{{baseUrl}}/api/admin/psychologists/{{psychologistId}}"
+          }
+        },
+        {
+          "name": "DELETE /api/admin/psychologists/:id",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/admin/psychologists/{{psychologistId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Evaluaciones",
+      "item": [
+        {
+          "name": "GET /api/evaluaciones/preguntas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/evaluaciones/preguntas"
+          }
+        },
+        {
+          "name": "POST /api/evaluaciones",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "let json = {};",
+                  "try { json = pm.response.json(); } catch (e) {}",
+                  "const id = json.id || json.evaluacion?.id || json.data?.id;",
+                  "if (id) pm.collectionVariables.set('evaluacionId', String(id));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuario_id\": {{userId}},\n  \"puntaje_total\": 50,\n  \"estado_semaforo\": \"amarillo\",\n  \"observaciones\": \"Observacion de prueba\"\n}"
+            },
+            "url": "{{baseUrl}}/api/evaluaciones"
+          }
+        },
+        {
+          "name": "GET /api/evaluaciones",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/evaluaciones?page={{page}}&limit={{limit}}"
+          }
+        },
+        {
+          "name": "GET /api/evaluaciones/:id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/evaluaciones/{{evaluacionId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Encuestas",
+      "item": [
+        {
+          "name": "GET /api/encuestas",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/encuestas?page={{page}}&limit={{limit}}"
+          }
+        },
+        {
+          "name": "GET /api/encuestas/:id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/encuestas/{{encuestaId}}"
+          }
+        },
+        {
+          "name": "POST /api/encuestas",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "let json = {};",
+                  "try { json = pm.response.json(); } catch (e) {}",
+                  "const id = json.id || json.encuesta?.id || json.data?.id;",
+                  "if (id) pm.collectionVariables.set('encuestaId', String(id));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"codigo\": \"ENC-{{$timestamp}}\",\n  \"titulo\": \"Encuesta de bienestar\",\n  \"opciones\": {\n    \"preguntas\": [\n      \"Como te sientes hoy?\"\n    ]\n  }\n}"
+            },
+            "url": "{{baseUrl}}/api/encuestas"
+          }
+        },
+        {
+          "name": "PUT /api/encuestas/:id",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"codigo\": \"ENC-UPD-{{$timestamp}}\",\n  \"titulo\": \"Encuesta actualizada\",\n  \"opciones\": {\n    \"version\": 2\n  }\n}"
+            },
+            "url": "{{baseUrl}}/api/encuestas/{{encuestaId}}"
+          }
+        },
+        {
+          "name": "PATCH /api/encuestas/:id",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"Titulo parcial\"\n}"
+            },
+            "url": "{{baseUrl}}/api/encuestas/{{encuestaId}}"
+          }
+        },
+        {
+          "name": "DELETE /api/encuestas/:id",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/encuestas/{{encuestaId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Encuestas Respuestas",
+      "item": [
+        {
+          "name": "GET /api/encuestas-respuestas",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/encuestas-respuestas?usuario_id={{userId}}&encuesta_id={{encuestaId}}&page={{page}}&limit={{limit}}"
+          }
+        },
+        {
+          "name": "GET /api/encuestas-respuestas/:id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/encuestas-respuestas/{{encuestaRespuestaId}}"
+          }
+        },
+        {
+          "name": "POST /api/encuestas-respuestas",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "let json = {};",
+                  "try { json = pm.response.json(); } catch (e) {}",
+                  "const id = json.id || json.respuesta?.id || json.data?.id;",
+                  "if (id) pm.collectionVariables.set('encuestaRespuestaId', String(id));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuario_id\": {{userId}},\n  \"encuesta_id\": {{encuestaId}},\n  \"respuesta\": {\n    \"valor\": \"bien\"\n  }\n}"
+            },
+            "url": "{{baseUrl}}/api/encuestas-respuestas"
+          }
+        },
+        {
+          "name": "PUT /api/encuestas-respuestas/:id",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuario_id\": {{userId}},\n  \"encuesta_id\": {{encuestaId}},\n  \"respuesta\": {\n    \"valor\": \"actualizado\"\n  }\n}"
+            },
+            "url": "{{baseUrl}}/api/encuestas-respuestas/{{encuestaRespuestaId}}"
+          }
+        },
+        {
+          "name": "PATCH /api/encuestas-respuestas/:id",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"respuesta\": {\n    \"nota\": \"parcial\"\n  }\n}"
+            },
+            "url": "{{baseUrl}}/api/encuestas-respuestas/{{encuestaRespuestaId}}"
+          }
+        },
+        {
+          "name": "DELETE /api/encuestas-respuestas/:id",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/encuestas-respuestas/{{encuestaRespuestaId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Chats",
+      "item": [
+        {
+          "name": "GET /api/chats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/chats"
+          }
+        },
+        {
+          "name": "GET /api/chats/:id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/chats/{{chatId}}"
+          }
+        },
+        {
+          "name": "POST /api/chats",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "let json = {};",
+                  "try { json = pm.response.json(); } catch (e) {}",
+                  "const id = json.id || json.chat?.id || json.data?.id;",
+                  "if (id) pm.collectionVariables.set('chatId', String(id));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estudiante_id\": {{userId}},\n  \"psicologo_id\": {{psychologistId}},\n  \"is_active\": true,\n  \"isSendByAi\": false\n}"
+            },
+            "url": "{{baseUrl}}/api/chats"
+          }
+        },
+        {
+          "name": "PUT /api/chats/:id",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estudiante_id\": {{userId}},\n  \"psicologo_id\": {{psychologistId}},\n  \"finalizado_en\": \"{{$isoTimestamp}}\",\n  \"is_active\": true,\n  \"isSendByAi\": false\n}"
+            },
+            "url": "{{baseUrl}}/api/chats/{{chatId}}"
+          }
+        },
+        {
+          "name": "PATCH /api/chats/:id",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"is_active\": false\n}"
+            },
+            "url": "{{baseUrl}}/api/chats/{{chatId}}"
+          }
+        },
+        {
+          "name": "DELETE /api/chats/:id",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/chats/{{chatId}}"
+          }
+        },
+        {
+          "name": "Mensajes de Chat",
+          "item": [
+            {
+              "name": "GET /api/chats/:chatId/mensajes",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": "{{baseUrl}}/api/chats/{{chatId}}/mensajes?page={{page}}&limit={{limit}}"
+              }
+            },
+            {
+              "name": "GET /api/chats/:chatId/mensajes/:mensajeId",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": "{{baseUrl}}/api/chats/{{chatId}}/mensajes/{{mensajeId}}"
+              }
+            },
+            {
+              "name": "POST /api/chats/:chatId/mensajes",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "let json = {};",
+                      "try { json = pm.response.json(); } catch (e) {}",
+                      "const id = json.id || json.mensaje?.id || json.data?.id;",
+                      "if (id) pm.collectionVariables.set('mensajeId', String(id));"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"mensaje\": \"Hola, este es un mensaje de prueba\",\n  \"usuario_id\": {{userId}}\n}"
+                },
+                "url": "{{baseUrl}}/api/chats/{{chatId}}/mensajes"
+              }
+            },
+            {
+              "name": "PUT /api/chats/:chatId/mensajes/:mensajeId",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"mensaje\": \"Mensaje actualizado\"\n}"
+                },
+                "url": "{{baseUrl}}/api/chats/{{chatId}}/mensajes/{{mensajeId}}"
+              }
+            },
+            {
+              "name": "PATCH /api/chats/:chatId/mensajes/:mensajeId",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"mensaje\": \"Cambio parcial\"\n}"
+                },
+                "url": "{{baseUrl}}/api/chats/{{chatId}}/mensajes/{{mensajeId}}"
+              }
+            },
+            {
+              "name": "DELETE /api/chats/:chatId/mensajes/:mensajeId",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  }
+                ],
+                "url": "{{baseUrl}}/api/chats/{{chatId}}/mensajes/{{mensajeId}}"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Diario",
+      "item": [
+        {
+          "name": "GET /api/diario",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/diario?page={{page}}&limit={{limit}}"
+          }
+        },
+        {
+          "name": "GET /api/diario/:id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/diario/{{diarioId}}"
+          }
+        },
+        {
+          "name": "POST /api/diario",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "let json = {};",
+                  "try { json = pm.response.json(); } catch (e) {}",
+                  "const id = json.id || json.diario?.id || json.entrada?.id || json.data?.id;",
+                  "if (id) pm.collectionVariables.set('diarioId', String(id));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"Entrada de prueba\",\n  \"contenido\": \"Contenido de prueba\",\n  \"fecha\": \"{{$isoTimestamp}}\"\n}"
+            },
+            "url": "{{baseUrl}}/api/diario"
+          }
+        },
+        {
+          "name": "PUT /api/diario/:id",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"Entrada completa actualizada\",\n  \"contenido\": \"Contenido actualizado\",\n  \"fecha\": \"{{$isoTimestamp}}\"\n}"
+            },
+            "url": "{{baseUrl}}/api/diario/{{diarioId}}"
+          }
+        },
+        {
+          "name": "PATCH /api/diario/:id",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"contenido\": \"Ajuste parcial\"\n}"
+            },
+            "url": "{{baseUrl}}/api/diario/{{diarioId}}"
+          }
+        },
+        {
+          "name": "DELETE /api/diario/:id",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/diario/{{diarioId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Opciones de Registro de Actividades",
+      "item": [
+        {
+          "name": "GET /api/opciones-actividades",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/opciones-actividades"
+          }
+        },
+        {
+          "name": "GET /api/opciones-actividades/:id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/opciones-actividades/{{opcionActividadId}}"
+          }
+        },
+        {
+          "name": "POST /api/opciones-actividades",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "let json = {};",
+                  "try { json = pm.response.json(); } catch (e) {}",
+                  "const id = json.id || json.opcion?.id || json.data?.id;",
+                  "if (id) pm.collectionVariables.set('opcionActividadId', String(id));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Respiracion guiada\",\n  \"descripcion\": \"Actividad de relajacion\",\n  \"url_imagen\": \"https://example.com/image.jpg\"\n}"
+            },
+            "url": "{{baseUrl}}/api/opciones-actividades"
+          }
+        },
+        {
+          "name": "PUT /api/opciones-actividades/:id",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Actividad actualizada\",\n  \"descripcion\": \"Descripcion nueva\",\n  \"url_imagen\": \"https://example.com/new-image.jpg\"\n}"
+            },
+            "url": "{{baseUrl}}/api/opciones-actividades/{{opcionActividadId}}"
+          }
+        },
+        {
+          "name": "PATCH /api/opciones-actividades/:id",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"descripcion\": \"Cambio parcial\"\n}"
+            },
+            "url": "{{baseUrl}}/api/opciones-actividades/{{opcionActividadId}}"
+          }
+        },
+        {
+          "name": "DELETE /api/opciones-actividades/:id",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/opciones-actividades/{{opcionActividadId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Registro de Actividades de Usuarios",
+      "item": [
+        {
+          "name": "GET /api/registro-actividades",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/registro-actividades?page={{page}}&limit={{limit}}&opcion_id={{opcionActividadId}}"
+          }
+        },
+        {
+          "name": "GET /api/registro-actividades/:id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/registro-actividades/{{registroActividadId}}"
+          }
+        },
+        {
+          "name": "POST /api/registro-actividades",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "let json = {};",
+                  "try { json = pm.response.json(); } catch (e) {}",
+                  "const id = json.id || json.registro?.id || json.data?.id;",
+                  "if (id) pm.collectionVariables.set('registroActividadId', String(id));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"opcion_id\": {{opcionActividadId}},\n  \"vencimiento\": \"{{$isoTimestamp}}\",\n  \"fecha\": \"{{$isoTimestamp}}\",\n  \"observaciones\": \"Observaciones de prueba\"\n}"
+            },
+            "url": "{{baseUrl}}/api/registro-actividades"
+          }
+        },
+        {
+          "name": "PUT /api/registro-actividades/:id",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"opcion_id\": {{opcionActividadId}},\n  \"vencimiento\": \"{{$isoTimestamp}}\",\n  \"fecha\": \"{{$isoTimestamp}}\",\n  \"observaciones\": \"Registro actualizado\"\n}"
+            },
+            "url": "{{baseUrl}}/api/registro-actividades/{{registroActividadId}}"
+          }
+        },
+        {
+          "name": "PATCH /api/registro-actividades/:id",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"observaciones\": \"Actualizacion parcial\"\n}"
+            },
+            "url": "{{baseUrl}}/api/registro-actividades/{{registroActividadId}}"
+          }
+        },
+        {
+          "name": "DELETE /api/registro-actividades/:id",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/registro-actividades/{{registroActividadId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Chats IA",
+      "item": [
+        {
+          "name": "POST /api/chats/ia",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"prompt\": \"Necesito una tecnica corta para reducir ansiedad\"\n}"
+            },
+            "url": "{{baseUrl}}/api/chats/ia"
+          }
+        },
+        {
+          "name": "GET /api/chats/ia/historial",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/chats/ia/historial"
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "loginEmail",
+      "value": "admin@test.com",
+      "type": "string"
+    },
+    {
+      "key": "loginPassword",
+      "value": "12345678",
+      "type": "string"
+    },
+    {
+      "key": "defaultPassword",
+      "value": "12345678",
+      "type": "string"
+    },
+    {
+      "key": "page",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "limit",
+      "value": "10",
+      "type": "string"
+    },
+    {
+      "key": "search",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "userId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "studentId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "psychologistId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "evaluacionId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "encuestaId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "encuestaRespuestaId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "chatId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "mensajeId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "diarioId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "opcionActividadId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "registroActividadId",
+      "value": "1",
+      "type": "string"
+    }
+  ]
+}
