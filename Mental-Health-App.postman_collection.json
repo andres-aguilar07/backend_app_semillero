@@ -92,6 +92,58 @@
       ]
     },
     {
+      "name": "Registro Emocional",
+      "item": [
+        {
+          "name": "GET /api/registro-emocional/preguntas",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/registro-emocional/preguntas"
+          }
+        },
+        {
+          "name": "GET /api/registro-emocional/usuarios/:usuarioId/fecha/:fecha",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/registro-emocional/usuarios/1/fecha/25-03-2026"
+          }
+        },
+        {
+          "name": "POST /api/registro-emocional",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuario_id\": 1,\n  \"respuestas\": [\n    {\n      \"pregunta_id\": 1,\n      \"opcion_id\": 1\n    },\n    {\n      \"pregunta_id\": 2,\n      \"opcion_id\": 6\n    },\n    {\n      \"pregunta_id\": 3,\n      \"opcion_id\": 11\n    }\n  ]\n}"
+            },
+            "url": "{{baseUrl}}/api/registro-emocional"
+          }
+        }
+      ]
+    },
+    {
       "name": "Usuarios",
       "item": [
         {

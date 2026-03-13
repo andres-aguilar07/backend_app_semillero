@@ -34,6 +34,7 @@ import evaluacionRoutes from './routes/evaluacion.routes';
 import opcionesActividadesRoutes from './routes/opciones-actividades.routes';
 import registroActividadesRoutes from './routes/registro-actividades.routes';
 import encuestasRespuestasRoutes from './routes/encuestas-respuestas.routes';
+import registroEmocionalRoutes from './routes/registro-emocional.routes';
 
 // Load environment variables
 dotenv.config();
@@ -62,6 +63,7 @@ app.use('/api/encuestas-respuestas', encuestasRespuestasRoutes)
 app.use('/api/diario', diarioRoutes)
 app.use('/api/opciones-actividades', opcionesActividadesRoutes)
 app.use('/api/registro-actividades', registroActividadesRoutes)
+app.use('/api/registro-emocional', registroEmocionalRoutes)
 app.use('/api/admin', adminRoutes);
 
 // Health check endpoint
