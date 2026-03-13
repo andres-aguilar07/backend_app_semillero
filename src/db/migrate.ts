@@ -13,7 +13,7 @@ export async function runMigrations() {
     return true;
   } catch (error) {
     console.error('Error running migrations:', error);
-    return false;
+    throw error;
   }
 }
 

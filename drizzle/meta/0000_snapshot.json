@@ -1,5 +1,5 @@
 {
-  "id": "6c01d361-b9f3-4bf1-af92-cff21d5f137f",
+  "id": "c2f8cbf4-a6b4-4483-b84d-e5ef153be4dd",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
@@ -45,6 +45,13 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false
+        },
+        "isSendByAi": {
+          "name": "isSendByAi",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
         },
         "is_active": {
           "name": "is_active",
@@ -900,6 +907,12 @@
           "primaryKey": true,
           "notNull": true
         },
+        "pregunta_id": {
+          "name": "pregunta_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
         "nombre": {
           "name": "nombre",
           "type": "varchar(255)",
@@ -924,6 +937,13 @@
           "primaryKey": false,
           "notNull": true
         },
+        "is_active": {
+          "name": "is_active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
@@ -946,7 +966,21 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "opciones_registro_emocional_pregunta_id_preguntas_registro_emocional_id_fk": {
+          "name": "opciones_registro_emocional_pregunta_id_preguntas_registro_emocional_id_fk",
+          "tableFrom": "opciones_registro_emocional",
+          "tableTo": "preguntas_registro_emocional",
+          "columnsFrom": [
+            "pregunta_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
@@ -995,6 +1029,63 @@
         }
       },
       "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "preguntas_registro_emocional": {
+      "name": "preguntas_registro_emocional",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "texto": {
+          "name": "texto",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "is_active": {
+          "name": "is_active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "uq_preguntas_registro_emocional_texto": {
+          "name": "uq_preguntas_registro_emocional_texto",
+          "columns": [
+            "texto"
+          ],
+          "isUnique": true
+        }
+      },
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
@@ -1125,11 +1216,31 @@
           "primaryKey": false,
           "notNull": false
         },
+        "pregunta_id": {
+          "name": "pregunta_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
         "opcion_id": {
           "name": "opcion_id",
           "type": "integer",
           "primaryKey": false,
           "notNull": false
+        },
+        "puntaje": {
+          "name": "puntaje",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "fecha_dia": {
+          "name": "fecha_dia",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_DATE"
         },
         "fecha": {
           "name": "fecha",
@@ -1173,12 +1284,28 @@
           ],
           "isUnique": false
         },
+        "idx_registro_emocional_pregunta_id": {
+          "name": "idx_registro_emocional_pregunta_id",
+          "columns": [
+            "pregunta_id"
+          ],
+          "isUnique": false
+        },
         "idx_registro_emocional_opcion_id": {
           "name": "idx_registro_emocional_opcion_id",
           "columns": [
             "opcion_id"
           ],
           "isUnique": false
+        },
+        "uq_registro_emocional_usuario_pregunta_fecha_dia": {
+          "name": "uq_registro_emocional_usuario_pregunta_fecha_dia",
+          "columns": [
+            "usuario_id",
+            "pregunta_id",
+            "fecha_dia"
+          ],
+          "isUnique": true
         }
       },
       "foreignKeys": {
@@ -1188,6 +1315,19 @@
           "tableTo": "usuarios",
           "columnsFrom": [
             "usuario_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "registro_emocional_pregunta_id_preguntas_registro_emocional_id_fk": {
+          "name": "registro_emocional_pregunta_id_preguntas_registro_emocional_id_fk",
+          "tableFrom": "registro_emocional",
+          "tableTo": "preguntas_registro_emocional",
+          "columnsFrom": [
+            "pregunta_id"
           ],
           "columnsTo": [
             "id"

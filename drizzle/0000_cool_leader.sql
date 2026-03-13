@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS "chats" (
 	"iniciado_en" timestamp DEFAULT now() NOT NULL,
 	"ultima_actividad" timestamp DEFAULT now() NOT NULL,
 	"finalizado_en" timestamp,
+	"isSendByAi" boolean DEFAULT false NOT NULL,
 	"is_active" boolean DEFAULT true NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL,
@@ -113,10 +114,12 @@ CREATE TABLE IF NOT EXISTS "opciones_registro_actividades" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "opciones_registro_emocional" (
 	"id" serial PRIMARY KEY NOT NULL,
+	"pregunta_id" integer,
 	"nombre" varchar(255) NOT NULL,
 	"descripcion" text,
 	"url_imagen" varchar(255) NOT NULL,
 	"puntaje" integer NOT NULL,
+	"is_active" boolean DEFAULT true NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL,
 	"deleted_at" timestamp
@@ -126,6 +129,15 @@ CREATE TABLE IF NOT EXISTS "preguntas" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"texto" text NOT NULL,
 	"peso" integer DEFAULT 1 NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"updated_at" timestamp DEFAULT now() NOT NULL,
+	"deleted_at" timestamp
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "preguntas_registro_emocional" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"texto" text NOT NULL,
+	"is_active" boolean DEFAULT true NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL,
 	"deleted_at" timestamp
@@ -146,7 +158,10 @@ CREATE TABLE IF NOT EXISTS "registro_actividades_usuarios" (
 CREATE TABLE IF NOT EXISTS "registro_emocional" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"usuario_id" integer,
+	"pregunta_id" integer,
 	"opcion_id" integer,
+	"puntaje" integer DEFAULT 0 NOT NULL,
+	"fecha_dia" date DEFAULT CURRENT_DATE NOT NULL,
 	"fecha" timestamp DEFAULT now() NOT NULL,
 	"observaciones" text,
 	"created_at" timestamp DEFAULT now() NOT NULL,
@@ -221,10 +236,13 @@ CREATE INDEX IF NOT EXISTS "idx_fallas_tecnicas_usuario_id" ON "fallas_tecnicas"
 CREATE INDEX IF NOT EXISTS "idx_feedback_usuario_id" ON "feedback" ("usuario_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "idx_mensajes_chat_chat_id" ON "mensajes_chat" ("chat_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "idx_mensajes_chat_usuario_id" ON "mensajes_chat" ("usuario_id");--> statement-breakpoint
+CREATE UNIQUE INDEX IF NOT EXISTS "uq_preguntas_registro_emocional_texto" ON "preguntas_registro_emocional" ("texto");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "idx_registro_actividades_usuarios_usuario_id" ON "registro_actividades_usuarios" ("usuario_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "idx_registro_actividades_usuarios_opcion_id" ON "registro_actividades_usuarios" ("opcion_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "idx_registro_emocional_usuario_id" ON "registro_emocional" ("usuario_id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "idx_registro_emocional_pregunta_id" ON "registro_emocional" ("pregunta_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "idx_registro_emocional_opcion_id" ON "registro_emocional" ("opcion_id");--> statement-breakpoint
+CREATE UNIQUE INDEX IF NOT EXISTS "uq_registro_emocional_usuario_pregunta_fecha_dia" ON "registro_emocional" ("usuario_id","pregunta_id","fecha_dia");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "idx_respuestas_evaluacion_id" ON "respuestas" ("evaluacion_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "idx_respuestas_pregunta_id" ON "respuestas" ("pregunta_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "idx_usuarios_id_rol" ON "usuarios" ("id_rol");--> statement-breakpoint
@@ -301,6 +319,12 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
+ ALTER TABLE "opciones_registro_emocional" ADD CONSTRAINT "opciones_registro_emocional_pregunta_id_preguntas_registro_emocional_id_fk" FOREIGN KEY ("pregunta_id") REFERENCES "preguntas_registro_emocional"("id") ON DELETE set null ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
  ALTER TABLE "registro_actividades_usuarios" ADD CONSTRAINT "registro_actividades_usuarios_usuario_id_usuarios_id_fk" FOREIGN KEY ("usuario_id") REFERENCES "usuarios"("id") ON DELETE set null ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
@@ -314,6 +338,12 @@ END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "registro_emocional" ADD CONSTRAINT "registro_emocional_usuario_id_usuarios_id_fk" FOREIGN KEY ("usuario_id") REFERENCES "usuarios"("id") ON DELETE set null ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "registro_emocional" ADD CONSTRAINT "registro_emocional_pregunta_id_preguntas_registro_emocional_id_fk" FOREIGN KEY ("pregunta_id") REFERENCES "preguntas_registro_emocional"("id") ON DELETE set null ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

@@ -1,5 +1,5 @@
-import { relations } from 'drizzle-orm';
-import { pgTable, serial, varchar, integer, timestamp, boolean, text, date, index } from 'drizzle-orm/pg-core';
+import { relations, sql } from 'drizzle-orm';
+import { pgTable, serial, varchar, integer, timestamp, boolean, text, date, index, uniqueIndex } from 'drizzle-orm/pg-core';
 
 // ================================
 // USUARIOS
@@ -219,8 +219,24 @@ export const encuestasRespuestasrelations = relations(encuestasRespuestas, ({ on
 // REGISTRO EMOCIONAL
 // ================================
 
+export const preguntas_registro_emocional = pgTable('preguntas_registro_emocional', {
+  id: serial('id').primaryKey(),
+
+  texto: text('texto').notNull(),
+  is_active: boolean('is_active').default(true).notNull(),
+
+  created_at: timestamp('created_at').defaultNow().notNull(),
+  updated_at: timestamp('updated_at').defaultNow().notNull(),
+  deleted_at: timestamp('deleted_at'),
+}, (t) => ({
+  uqPreguntasRegistroEmocionalTexto: uniqueIndex('uq_preguntas_registro_emocional_texto').on(t.texto),
+}));
+
 export const opciones_registro_emocional = pgTable('opciones_registro_emocional', {
   id: serial('id').primaryKey(),
+
+  pregunta_id: integer('pregunta_id')
+    .references(() => preguntas_registro_emocional.id, { onDelete: 'set null' }),
 
   nombre: varchar('nombre', { length: 255 }).notNull(),
   descripcion: text('descripcion'),
@@ -228,6 +244,7 @@ export const opciones_registro_emocional = pgTable('opciones_registro_emocional'
   url_imagen: varchar('url_imagen', { length: 255 }).notNull(),
 
   puntaje: integer('puntaje').notNull(),
+  is_active: boolean('is_active').default(true).notNull(),
 
   created_at: timestamp('created_at').defaultNow().notNull(),
   updated_at: timestamp('updated_at').defaultNow().notNull(),
@@ -239,10 +256,16 @@ export const registro_emocional = pgTable('registro_emocional', {
 
   usuario_id: integer('usuario_id')
     .references(() => usuarios.id, { onDelete: 'set null' }),
+
+  pregunta_id: integer('pregunta_id')
+    .references(() => preguntas_registro_emocional.id, { onDelete: 'set null' }),
   
   opcion_id: integer('opcion_id')
     .references(() => opciones_registro_emocional.id, { onDelete: 'set null' }),
 
+  puntaje: integer('puntaje').default(0).notNull(),
+
+  fecha_dia: date('fecha_dia').default(sql`CURRENT_DATE`).notNull(),
   fecha: timestamp('fecha').defaultNow().notNull(),
 
   observaciones: text('observaciones'),
@@ -252,7 +275,10 @@ export const registro_emocional = pgTable('registro_emocional', {
   deleted_at: timestamp('deleted_at'),
 }, (t) => ({
   idxRegistroEmocionalUsuarioId: index('idx_registro_emocional_usuario_id').on(t.usuario_id),
+  idxRegistroEmocionalPreguntaId: index('idx_registro_emocional_pregunta_id').on(t.pregunta_id),
   idxRegistroEmocionalOpcionId: index('idx_registro_emocional_opcion_id').on(t.opcion_id),
+  uqRegistroEmocionalUsuarioPreguntaFechaDia: uniqueIndex('uq_registro_emocional_usuario_pregunta_fecha_dia')
+    .on(t.usuario_id, t.pregunta_id, t.fecha_dia),
 }));
 
 export const registro_emocional_usuariosrelations = relations(registro_emocional, ({ one }) => ({
@@ -260,9 +286,25 @@ export const registro_emocional_usuariosrelations = relations(registro_emocional
     fields: [registro_emocional.usuario_id],
     references: [usuarios.id],
   }),
+  pregunta: one(preguntas_registro_emocional, {
+    fields: [registro_emocional.pregunta_id],
+    references: [preguntas_registro_emocional.id],
+  }),
   opcion: one(opciones_registro_emocional, {
     fields: [registro_emocional.opcion_id],
     references: [opciones_registro_emocional.id],
+  }),
+}));
+
+export const preguntas_registro_emocionalrelations = relations(preguntas_registro_emocional, ({ many }) => ({
+  opciones: many(opciones_registro_emocional),
+  registros: many(registro_emocional),
+}));
+
+export const opciones_registro_emocionalrelations = relations(opciones_registro_emocional, ({ one }) => ({
+  pregunta: one(preguntas_registro_emocional, {
+    fields: [opciones_registro_emocional.pregunta_id],
+    references: [preguntas_registro_emocional.id],
   }),
 }));
 

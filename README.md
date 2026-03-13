@@ -62,6 +62,9 @@ app-1  | Server is running on port 3000
 app-1  | Health check available at http://localhost:3000/health
 app-1  | AI Chat available at http://localhost:3000/api/chats/ia
 
+- ADICIONAL PERO RECOMENDADO:
+Hacer 'npm install' para que el editor de código no de error en todas las importaciones
+
 ### Servicios y puertos
 - App (API): `3000` → `http://localhost:3000`
 - Ollama: `11434` → `http://localhost:11434`
@@ -75,18 +78,27 @@ Las variables se definen en `docker-compose.yml`, esto por simplicidad de desarr
 ### Migraciones automáticas al iniciar
 La imagen de la app ejecuta `node dist/db/migrate.js` en el arranque, por lo que al levantar con Docker Compose se aplican migraciones automáticamente.
 
-### Flujo recomendado cuando se cambia el esquema de drizzle, es decir, cuando se quiere hacer alguna modificación a la base de datos
-1. Genera archivos de migración:
+### Migración inicial (cuando no existe la carpeta `drizzle/`)
+Para crear la carpeta `drizzle/` y el primer SQL **en tu proyecto local**, ejecuta:
 ```bash
-docker compose exec app npm run db:generate
+npm run db:generate
 ```
-2. Reinicia `app` (o vuelve a levantar el stack) para que se apliquen automáticamente al iniciar:
+Luego levanta Docker:
 ```bash
-docker compose restart app
+docker compose up -d --build
+```
+
+### Flujo recomendado cuando se cambia el esquema de drizzle, es decir, cuando se quiere hacer alguna modificación a la base de datos
+Ejecuta un único comando para generar y aplicar migraciones:
+```bash
+docker compose exec app npm run db:deploy
 ```
 
 ### Comandos útiles (manuales)
 ```bash
+# Generar + aplicar migraciones en un solo paso
+docker compose exec app npm run db:deploy
+
 # Aplicar migraciones manualmente (opcional)
 docker compose exec app npm run db:migrate
 

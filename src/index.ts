@@ -1,23 +1,39 @@
+// Express
 import express, { Request, Response } from 'express';
-import cors from 'cors';
-import morgan from 'morgan';
-import http from 'http';
-import { Server as SocketServer } from 'socket.io';
-import dotenv from 'dotenv';
-import encuestasRoutes from './routes/encuestas.routes'
-import encuestasRespuestasRoutes from './routes/encuestas-respuestas.routes'
-import diarioRoutes from './routes/diario.routes'
-import opcionesActividadesRoutes from './routes/opciones-actividades.routes'
-import registroActividadesRoutes from './routes/registro-actividades.routes'
-import { setupWebSocket } from './websocket/socket';
-import authRoutes from './routes/auth.routes';
-import userRoutes from './routes/user.routes';
-import evaluacionRoutes from './routes/evaluacion.routes';
-import chatRoutes from './routes/chat.routes';
-import adminRoutes from './routes/admin.routes';
+
+// DB
 import { runMigrations } from './db/migrate';
 import { seed } from './db/seed';
+
+// LIBS
+import cors from 'cors';
+import dotenv from 'dotenv';
+
+// Logger
+import morgan from 'morgan';
+
+// HTTP
+import http from 'http';
+import { Server as SocketServer } from 'socket.io';
+import { setupWebSocket } from './websocket/socket';
+
+// UTILS
+import { APISuccessResponse } from './shared/utils/api.utils';
+
+// IA
 import { initializeOllama } from './services/ollama.service';
+
+// ROUTES
+import authRoutes from './routes/auth.routes';
+import userRoutes from './routes/user.routes';
+import chatRoutes from './routes/chat.routes';
+import adminRoutes from './routes/admin.routes';
+import diarioRoutes from './routes/diario.routes';
+import encuestasRoutes from './routes/encuestas.routes';
+import evaluacionRoutes from './routes/evaluacion.routes';
+import opcionesActividadesRoutes from './routes/opciones-actividades.routes';
+import registroActividadesRoutes from './routes/registro-actividades.routes';
+import encuestasRespuestasRoutes from './routes/encuestas-respuestas.routes';
 
 // Load environment variables
 dotenv.config();
@@ -50,7 +66,7 @@ app.use('/api/admin', adminRoutes);
 
 // Health check endpoint
 app.get('/health', (_: Request, res: Response) => {
-  res.status(200).json({ status: 'ok' });
+  res.status(200).json(APISuccessResponse({ health: 'ok' }, 'Health check successful'));
 });
 
 // Setup WebSocket
@@ -73,7 +89,6 @@ async function initializeAndStartServer() {
     // Initialize Ollama if enabled
       try {
         await initializeOllama();
-        console.log('Ollama initialized successfully');
       } catch (ollamaError) {
         console.warn('Warning: Could not initialize Ollama:', ollamaError);
         console.log('Server will continue without Ollama support');
@@ -81,10 +96,13 @@ async function initializeAndStartServer() {
     
     // Start the server
     server.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`);
-      console.log(`Health check available at http://localhost:${PORT}/health`);
-      console.log(`AI Chat available at http://localhost:${PORT}/api/chats/ia`);
-      console.log(`Advanced AI Chat available at http://localhost:${PORT}/api/chats/ia/avanzado`);
+      console.log("\n*********************************************");
+      console.log(`* SERVIDOR (API) CORRIENDO EN EL PUERTO ${PORT} *`);
+      console.log("*********************************************\n");
+
+      // console.log(`Health check available at http://localhost:${PORT}/health`);
+      // console.log(`AI Chat available at http://localhost:${PORT}/api/chats/ia`);
+      // console.log(`Advanced AI Chat available at http://localhost:${PORT}/api/chats/ia/avanzado`);
     });
   } catch (error) {
     console.error('Failed to initialize the server:', error);

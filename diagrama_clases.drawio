@@ -1,0 +1,597 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+  <root>
+    <mxCell id="0" />
+    <mxCell id="1" parent="0" />
+
+    <!-- ===== ROLES ===== -->
+    <mxCell id="roles_title" value="roles" style="shape=table;startSize=30;container=1;collapsible=1;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=1;fontSize=14;" vertex="1" parent="1">
+      <mxGeometry x="40" y="40" width="260" height="210" as="geometry" />
+    </mxCell>
+    <mxCell id="roles_h" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;" vertex="1" parent="roles_title">
+      <mxGeometry y="30" width="260" height="10" as="geometry" />
+    </mxCell>
+    <mxCell id="roles_id" value="PK id : serial" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="roles_title">
+      <mxGeometry y="40" width="260" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="roles_nombre" value="nombre : varchar(255) UNIQUE NOT NULL" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="roles_title">
+      <mxGeometry y="70" width="260" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="roles_descripcion" value="descripcion : text" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="roles_title">
+      <mxGeometry y="100" width="260" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="roles_created_at" value="created_at : timestamp" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="roles_title">
+      <mxGeometry y="130" width="260" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="roles_updated_at" value="updated_at : timestamp" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="roles_title">
+      <mxGeometry y="160" width="260" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="roles_deleted_at" value="deleted_at : timestamp" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="roles_title">
+      <mxGeometry y="190" width="260" height="30" as="geometry" />
+    </mxCell>
+
+    <!-- ===== USUARIOS ===== -->
+    <mxCell id="usuarios_title" value="usuarios" style="shape=table;startSize=30;container=1;collapsible=1;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=1;fontSize=14;" vertex="1" parent="1">
+      <mxGeometry x="380" y="40" width="300" height="490" as="geometry" />
+    </mxCell>
+    <mxCell id="usuarios_h" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;" vertex="1" parent="usuarios_title">
+      <mxGeometry y="30" width="300" height="10" as="geometry" />
+    </mxCell>
+    <mxCell id="usuarios_id" value="PK id : serial" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="usuarios_title">
+      <mxGeometry y="40" width="300" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="usuarios_id_rol" value="FK id_rol : integer" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="usuarios_title">
+      <mxGeometry y="70" width="300" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="usuarios_nombres" value="nombres : varchar(255) NOT NULL" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="usuarios_title">
+      <mxGeometry y="100" width="300" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="usuarios_apellidos" value="apellidos : varchar(255) NOT NULL" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="usuarios_title">
+      <mxGeometry y="130" width="300" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="usuarios_correo" value="correo : varchar(255) UNIQUE NOT NULL" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="usuarios_title">
+      <mxGeometry y="160" width="300" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="usuarios_contrasena" value="contrasena : varchar(255) NOT NULL" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="usuarios_title">
+      <mxGeometry y="190" width="300" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="usuarios_ciudad" value="ciudad : varchar(255)" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="usuarios_title">
+      <mxGeometry y="220" width="300" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="usuarios_semestre" value="semestre_actual : varchar(255)" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="usuarios_title">
+      <mxGeometry y="250" width="300" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="usuarios_telefono" value="telefono : varchar(50)" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="usuarios_title">
+      <mxGeometry y="280" width="300" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="usuarios_edad" value="edad : integer" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="usuarios_title">
+      <mxGeometry y="310" width="300" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="usuarios_sexo" value="sexo : varchar(10)" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="usuarios_title">
+      <mxGeometry y="340" width="300" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="usuarios_fnac" value="fecha_nacimiento : date" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="usuarios_title">
+      <mxGeometry y="370" width="300" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="usuarios_idioma" value="idioma : varchar(255)" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="usuarios_title">
+      <mxGeometry y="400" width="300" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="usuarios_esp" value="especialidad_psicologo : varchar(255)" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="usuarios_title">
+      <mxGeometry y="430" width="300" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="usuarios_freg" value="fecha_registro : timestamp NOT NULL" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="usuarios_title">
+      <mxGeometry y="460" width="300" height="30" as="geometry" />
+    </mxCell>
+
+    <!-- ===== EVALUACIONES ===== -->
+    <mxCell id="evaluaciones_title" value="evaluaciones" style="shape=table;startSize=30;container=1;collapsible=1;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=1;fontSize=14;" vertex="1" parent="1">
+      <mxGeometry x="760" y="40" width="280" height="250" as="geometry" />
+    </mxCell>
+    <mxCell id="eval_h" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;" vertex="1" parent="evaluaciones_title">
+      <mxGeometry y="30" width="280" height="10" as="geometry" />
+    </mxCell>
+    <mxCell id="eval_id" value="PK id : serial" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="evaluaciones_title">
+      <mxGeometry y="40" width="280" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="eval_usuario_id" value="FK usuario_id : integer" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="evaluaciones_title">
+      <mxGeometry y="70" width="280" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="eval_fecha" value="fecha : timestamp NOT NULL" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="evaluaciones_title">
+      <mxGeometry y="100" width="280" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="eval_puntaje" value="puntaje_total : integer" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="evaluaciones_title">
+      <mxGeometry y="130" width="280" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="eval_semaforo" value="estado_semaforo : varchar(50)" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="evaluaciones_title">
+      <mxGeometry y="160" width="280" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="eval_obs" value="observaciones : text" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="evaluaciones_title">
+      <mxGeometry y="190" width="280" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="eval_audit" value="created_at / updated_at / deleted_at" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=#f5f5f5;fontColor=#666;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;top=0;left=0;right=0;bottom=0;" vertex="1" parent="evaluaciones_title">
+      <mxGeometry y="220" width="280" height="30" as="geometry" />
+    </mxCell>
+
+    <!-- ===== PREGUNTAS ===== -->
+    <mxCell id="preguntas_title" value="preguntas" style="shape=table;startSize=30;container=1;collapsible=1;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=1;fontSize=14;" vertex="1" parent="1">
+      <mxGeometry x="1120" y="40" width="270" height="190" as="geometry" />
+    </mxCell>
+    <mxCell id="preg_h" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;" vertex="1" parent="preguntas_title">
+      <mxGeometry y="30" width="270" height="10" as="geometry" />
+    </mxCell>
+    <mxCell id="preg_id" value="PK id : serial" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="preguntas_title">
+      <mxGeometry y="40" width="270" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="preg_texto" value="texto : text NOT NULL" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="preguntas_title">
+      <mxGeometry y="70" width="270" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="preg_peso" value="peso : integer DEFAULT 1 NOT NULL" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="preguntas_title">
+      <mxGeometry y="100" width="270" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="preg_audit" value="created_at / updated_at / deleted_at" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=#f5f5f5;fontColor=#666;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;top=0;left=0;right=0;bottom=0;" vertex="1" parent="preguntas_title">
+      <mxGeometry y="130" width="270" height="30" as="geometry" />
+    </mxCell>
+
+    <!-- ===== RESPUESTAS ===== -->
+    <mxCell id="respuestas_title" value="respuestas" style="shape=table;startSize=30;container=1;collapsible=1;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=1;fontSize=14;" vertex="1" parent="1">
+      <mxGeometry x="1120" y="300" width="270" height="220" as="geometry" />
+    </mxCell>
+    <mxCell id="resp_h" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;" vertex="1" parent="respuestas_title">
+      <mxGeometry y="30" width="270" height="10" as="geometry" />
+    </mxCell>
+    <mxCell id="resp_id" value="PK id : serial" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="respuestas_title">
+      <mxGeometry y="40" width="270" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="resp_eval_id" value="FK evaluacion_id : integer" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="respuestas_title">
+      <mxGeometry y="70" width="270" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="resp_preg_id" value="FK pregunta_id : integer" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="respuestas_title">
+      <mxGeometry y="100" width="270" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="resp_respuesta" value="respuesta : integer" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="respuestas_title">
+      <mxGeometry y="130" width="270" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="resp_puntaje" value="puntaje_calculado : integer" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="respuestas_title">
+      <mxGeometry y="160" width="270" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="resp_audit" value="created_at / updated_at / deleted_at" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=#f5f5f5;fontColor=#666;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;top=0;left=0;right=0;bottom=0;" vertex="1" parent="respuestas_title">
+      <mxGeometry y="190" width="270" height="30" as="geometry" />
+    </mxCell>
+
+    <!-- ===== EVALUACIONES_RESPUESTAS_USUARIOS ===== -->
+    <mxCell id="eru_title" value="evaluaciones_respuestas_usuarios" style="shape=table;startSize=30;container=1;collapsible=1;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=1;fontSize=13;" vertex="1" parent="1">
+      <mxGeometry x="760" y="360" width="300" height="220" as="geometry" />
+    </mxCell>
+    <mxCell id="eru_h" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;" vertex="1" parent="eru_title">
+      <mxGeometry y="30" width="300" height="10" as="geometry" />
+    </mxCell>
+    <mxCell id="eru_id" value="PK id : serial" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="eru_title">
+      <mxGeometry y="40" width="300" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="eru_usuario_id" value="FK usuario_id : integer" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="eru_title">
+      <mxGeometry y="70" width="300" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="eru_eval_id" value="FK evaluacion_id : integer" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="eru_title">
+      <mxGeometry y="100" width="300" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="eru_respuestas" value="respuestas : text (JSON)" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="eru_title">
+      <mxGeometry y="130" width="300" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="eru_fecha" value="fecha : timestamp NOT NULL" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="eru_title">
+      <mxGeometry y="160" width="300" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="eru_audit" value="created_at / updated_at / deleted_at" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=#f5f5f5;fontColor=#666;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;top=0;left=0;right=0;bottom=0;" vertex="1" parent="eru_title">
+      <mxGeometry y="190" width="300" height="30" as="geometry" />
+    </mxCell>
+
+    <!-- ===== ENCUESTAS ===== -->
+    <mxCell id="encuestas_title" value="encuestas" style="shape=table;startSize=30;container=1;collapsible=1;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=1;fontSize=14;" vertex="1" parent="1">
+      <mxGeometry x="40" y="640" width="260" height="190" as="geometry" />
+    </mxCell>
+    <mxCell id="enc_h" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;" vertex="1" parent="encuestas_title">
+      <mxGeometry y="30" width="260" height="10" as="geometry" />
+    </mxCell>
+    <mxCell id="enc_id" value="PK id : serial" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="encuestas_title">
+      <mxGeometry y="40" width="260" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="enc_codigo" value="codigo : varchar(255) UNIQUE NOT NULL" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="encuestas_title">
+      <mxGeometry y="70" width="260" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="enc_titulo" value="titulo : varchar(255) NOT NULL" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="encuestas_title">
+      <mxGeometry y="100" width="260" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="enc_opciones" value="opciones : text (JSON)" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="encuestas_title">
+      <mxGeometry y="130" width="260" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="enc_audit" value="created_at / updated_at / deleted_at" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=#f5f5f5;fontColor=#666;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;top=0;left=0;right=0;bottom=0;" vertex="1" parent="encuestas_title">
+      <mxGeometry y="160" width="260" height="30" as="geometry" />
+    </mxCell>
+
+    <!-- ===== ENCUESTAS_RESPUESTAS ===== -->
+    <mxCell id="encresp_title" value="encuestas_respuestas" style="shape=table;startSize=30;container=1;collapsible=1;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=1;fontSize=14;" vertex="1" parent="1">
+      <mxGeometry x="380" y="640" width="280" height="220" as="geometry" />
+    </mxCell>
+    <mxCell id="encresp_h" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;" vertex="1" parent="encresp_title">
+      <mxGeometry y="30" width="280" height="10" as="geometry" />
+    </mxCell>
+    <mxCell id="encresp_id" value="PK id : serial" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="encresp_title">
+      <mxGeometry y="40" width="280" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="encresp_usu" value="FK usuario_id : integer" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="encresp_title">
+      <mxGeometry y="70" width="280" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="encresp_enc" value="FK encuesta_id : integer" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="encresp_title">
+      <mxGeometry y="100" width="280" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="encresp_resp" value="respuesta : text (JSON)" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="encresp_title">
+      <mxGeometry y="130" width="280" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="encresp_fecha" value="fecha : timestamp NOT NULL" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="encresp_title">
+      <mxGeometry y="160" width="280" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="encresp_audit" value="created_at / updated_at / deleted_at" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=#f5f5f5;fontColor=#666;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;top=0;left=0;right=0;bottom=0;" vertex="1" parent="encresp_title">
+      <mxGeometry y="190" width="280" height="30" as="geometry" />
+    </mxCell>
+
+    <!-- ===== OPCIONES_REGISTRO_EMOCIONAL ===== -->
+    <mxCell id="ore_title" value="opciones_registro_emocional" style="shape=table;startSize=30;container=1;collapsible=1;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=1;fontSize=13;" vertex="1" parent="1">
+      <mxGeometry x="40" y="960" width="280" height="220" as="geometry" />
+    </mxCell>
+    <mxCell id="ore_h" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;" vertex="1" parent="ore_title">
+      <mxGeometry y="30" width="280" height="10" as="geometry" />
+    </mxCell>
+    <mxCell id="ore_id" value="PK id : serial" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="ore_title">
+      <mxGeometry y="40" width="280" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="ore_nombre" value="nombre : varchar(255) NOT NULL" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="ore_title">
+      <mxGeometry y="70" width="280" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="ore_desc" value="descripcion : text" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="ore_title">
+      <mxGeometry y="100" width="280" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="ore_img" value="url_imagen : varchar(255) NOT NULL" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="ore_title">
+      <mxGeometry y="130" width="280" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="ore_puntaje" value="puntaje : integer NOT NULL" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="ore_title">
+      <mxGeometry y="160" width="280" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="ore_audit" value="created_at / updated_at / deleted_at" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=#f5f5f5;fontColor=#666;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;top=0;left=0;right=0;bottom=0;" vertex="1" parent="ore_title">
+      <mxGeometry y="190" width="280" height="30" as="geometry" />
+    </mxCell>
+
+    <!-- ===== REGISTRO_EMOCIONAL ===== -->
+    <mxCell id="re_title" value="registro_emocional" style="shape=table;startSize=30;container=1;collapsible=1;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=1;fontSize=14;" vertex="1" parent="1">
+      <mxGeometry x="380" y="960" width="280" height="220" as="geometry" />
+    </mxCell>
+    <mxCell id="re_h" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;" vertex="1" parent="re_title">
+      <mxGeometry y="30" width="280" height="10" as="geometry" />
+    </mxCell>
+    <mxCell id="re_id" value="PK id : serial" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="re_title">
+      <mxGeometry y="40" width="280" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="re_usuario_id" value="FK usuario_id : integer" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="re_title">
+      <mxGeometry y="70" width="280" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="re_opcion_id" value="FK opcion_id : integer" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="re_title">
+      <mxGeometry y="100" width="280" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="re_fecha" value="fecha : timestamp NOT NULL" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="re_title">
+      <mxGeometry y="130" width="280" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="re_obs" value="observaciones : text" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="re_title">
+      <mxGeometry y="160" width="280" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="re_audit" value="created_at / updated_at / deleted_at" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=#f5f5f5;fontColor=#666;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;top=0;left=0;right=0;bottom=0;" vertex="1" parent="re_title">
+      <mxGeometry y="190" width="280" height="30" as="geometry" />
+    </mxCell>
+
+    <!-- ===== OPCIONES_REGISTRO_ACTIVIDADES ===== -->
+    <mxCell id="ora_title" value="opciones_registro_actividades" style="shape=table;startSize=30;container=1;collapsible=1;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=1;fontSize=13;" vertex="1" parent="1">
+      <mxGeometry x="740" y="960" width="280" height="190" as="geometry" />
+    </mxCell>
+    <mxCell id="ora_h" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;" vertex="1" parent="ora_title">
+      <mxGeometry y="30" width="280" height="10" as="geometry" />
+    </mxCell>
+    <mxCell id="ora_id" value="PK id : serial" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="ora_title">
+      <mxGeometry y="40" width="280" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="ora_nombre" value="nombre : varchar(255) NOT NULL" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="ora_title">
+      <mxGeometry y="70" width="280" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="ora_desc" value="descripcion : text" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="ora_title">
+      <mxGeometry y="100" width="280" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="ora_img" value="url_imagen : varchar(255) NOT NULL" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="ora_title">
+      <mxGeometry y="130" width="280" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="ora_audit" value="created_at / updated_at / deleted_at" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=#f5f5f5;fontColor=#666;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;top=0;left=0;right=0;bottom=0;" vertex="1" parent="ora_title">
+      <mxGeometry y="160" width="280" height="30" as="geometry" />
+    </mxCell>
+
+    <!-- ===== REGISTRO_ACTIVIDADES_USUARIOS ===== -->
+    <mxCell id="rau_title" value="registro_actividades_usuarios" style="shape=table;startSize=30;container=1;collapsible=1;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=1;fontSize=13;" vertex="1" parent="1">
+      <mxGeometry x="1100" y="960" width="290" height="250" as="geometry" />
+    </mxCell>
+    <mxCell id="rau_h" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;" vertex="1" parent="rau_title">
+      <mxGeometry y="30" width="290" height="10" as="geometry" />
+    </mxCell>
+    <mxCell id="rau_id" value="PK id : serial" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="rau_title">
+      <mxGeometry y="40" width="290" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="rau_usu" value="FK usuario_id : integer" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="rau_title">
+      <mxGeometry y="70" width="290" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="rau_opc" value="FK opcion_id : integer" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="rau_title">
+      <mxGeometry y="100" width="290" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="rau_venc" value="vencimiento : timestamp NOT NULL" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="rau_title">
+      <mxGeometry y="130" width="290" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="rau_fecha" value="fecha : timestamp NOT NULL" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="rau_title">
+      <mxGeometry y="160" width="290" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="rau_obs" value="observaciones : text" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="rau_title">
+      <mxGeometry y="190" width="290" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="rau_audit" value="created_at / updated_at / deleted_at" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=#f5f5f5;fontColor=#666;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;top=0;left=0;right=0;bottom=0;" vertex="1" parent="rau_title">
+      <mxGeometry y="220" width="290" height="30" as="geometry" />
+    </mxCell>
+
+    <!-- ===== CHATS ===== -->
+    <mxCell id="chats_title" value="chats" style="shape=table;startSize=30;container=1;collapsible=1;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=1;fontSize=14;" vertex="1" parent="1">
+      <mxGeometry x="760" y="640" width="290" height="280" as="geometry" />
+    </mxCell>
+    <mxCell id="chats_h" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;" vertex="1" parent="chats_title">
+      <mxGeometry y="30" width="290" height="10" as="geometry" />
+    </mxCell>
+    <mxCell id="chats_id" value="PK id : serial" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="chats_title">
+      <mxGeometry y="40" width="290" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="chats_est" value="FK estudiante_id : integer" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="chats_title">
+      <mxGeometry y="70" width="290" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="chats_psic" value="FK psicologo_id : integer" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="chats_title">
+      <mxGeometry y="100" width="290" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="chats_ini" value="iniciado_en : timestamp NOT NULL" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="chats_title">
+      <mxGeometry y="130" width="290" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="chats_ulta" value="ultima_actividad : timestamp NOT NULL" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="chats_title">
+      <mxGeometry y="160" width="290" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="chats_fin" value="finalizado_en : timestamp" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="chats_title">
+      <mxGeometry y="190" width="290" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="chats_ai" value="isSendByAi : boolean DEFAULT false" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="chats_title">
+      <mxGeometry y="220" width="290" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="chats_active" value="is_active : boolean DEFAULT true" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="chats_title">
+      <mxGeometry y="250" width="290" height="30" as="geometry" />
+    </mxCell>
+
+    <!-- ===== MENSAJES_CHAT ===== -->
+    <mxCell id="mc_title" value="mensajes_chat" style="shape=table;startSize=30;container=1;collapsible=1;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=1;fontSize=14;" vertex="1" parent="1">
+      <mxGeometry x="1130" y="640" width="270" height="220" as="geometry" />
+    </mxCell>
+    <mxCell id="mc_h" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;" vertex="1" parent="mc_title">
+      <mxGeometry y="30" width="270" height="10" as="geometry" />
+    </mxCell>
+    <mxCell id="mc_id" value="PK id : serial" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="mc_title">
+      <mxGeometry y="40" width="270" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="mc_chat_id" value="FK chat_id : integer" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="mc_title">
+      <mxGeometry y="70" width="270" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="mc_usu_id" value="FK usuario_id : integer" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="mc_title">
+      <mxGeometry y="100" width="270" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="mc_msg" value="mensaje : text NOT NULL" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="mc_title">
+      <mxGeometry y="130" width="270" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="mc_env" value="enviado_en : timestamp NOT NULL" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="mc_title">
+      <mxGeometry y="160" width="270" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="mc_audit" value="created_at / updated_at / deleted_at" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=#f5f5f5;fontColor=#666;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;top=0;left=0;right=0;bottom=0;" vertex="1" parent="mc_title">
+      <mxGeometry y="190" width="270" height="30" as="geometry" />
+    </mxCell>
+
+    <!-- ===== DIARIO ===== -->
+    <mxCell id="diario_title" value="diario" style="shape=table;startSize=30;container=1;collapsible=1;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=1;fontSize=14;" vertex="1" parent="1">
+      <mxGeometry x="40" y="1270" width="260" height="220" as="geometry" />
+    </mxCell>
+    <mxCell id="dia_h" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;" vertex="1" parent="diario_title">
+      <mxGeometry y="30" width="260" height="10" as="geometry" />
+    </mxCell>
+    <mxCell id="dia_id" value="PK id : serial" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="diario_title">
+      <mxGeometry y="40" width="260" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="dia_usu" value="FK usuario_id : integer" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="diario_title">
+      <mxGeometry y="70" width="260" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="dia_titulo" value="titulo : varchar(255) NOT NULL" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="diario_title">
+      <mxGeometry y="100" width="260" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="dia_cont" value="contenido : text NOT NULL" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="diario_title">
+      <mxGeometry y="130" width="260" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="dia_fecha" value="fecha : timestamp NOT NULL" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="diario_title">
+      <mxGeometry y="160" width="260" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="dia_audit" value="created_at / updated_at / deleted_at" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=#f5f5f5;fontColor=#666;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;top=0;left=0;right=0;bottom=0;" vertex="1" parent="diario_title">
+      <mxGeometry y="190" width="260" height="30" as="geometry" />
+    </mxCell>
+
+    <!-- ===== FEEDBACK ===== -->
+    <mxCell id="fb_title" value="feedback" style="shape=table;startSize=30;container=1;collapsible=1;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=1;fontSize=14;" vertex="1" parent="1">
+      <mxGeometry x="380" y="1270" width="270" height="220" as="geometry" />
+    </mxCell>
+    <mxCell id="fb_h" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;" vertex="1" parent="fb_title">
+      <mxGeometry y="30" width="270" height="10" as="geometry" />
+    </mxCell>
+    <mxCell id="fb_id" value="PK id : serial" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="fb_title">
+      <mxGeometry y="40" width="270" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="fb_usu" value="FK usuario_id : integer" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="fb_title">
+      <mxGeometry y="70" width="270" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="fb_puntaje" value="puntaje : integer NOT NULL" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="fb_title">
+      <mxGeometry y="100" width="270" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="fb_gusto" value="que_mas_te_gusto : text NOT NULL" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="fb_title">
+      <mxGeometry y="130" width="270" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="fb_com" value="comentarios : text" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="fb_title">
+      <mxGeometry y="160" width="270" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="fb_audit" value="created_at / updated_at / deleted_at" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=#f5f5f5;fontColor=#666;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;top=0;left=0;right=0;bottom=0;" vertex="1" parent="fb_title">
+      <mxGeometry y="190" width="270" height="30" as="geometry" />
+    </mxCell>
+
+    <!-- ===== FALLAS_TECNICAS ===== -->
+    <mxCell id="ft_title" value="fallas_tecnicas" style="shape=table;startSize=30;container=1;collapsible=1;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=1;fontSize=14;" vertex="1" parent="1">
+      <mxGeometry x="740" y="1270" width="270" height="220" as="geometry" />
+    </mxCell>
+    <mxCell id="ft_h" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;" vertex="1" parent="ft_title">
+      <mxGeometry y="30" width="270" height="10" as="geometry" />
+    </mxCell>
+    <mxCell id="ft_id" value="PK id : serial" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="ft_title">
+      <mxGeometry y="40" width="270" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="ft_usu" value="FK usuario_id : integer" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="ft_title">
+      <mxGeometry y="70" width="270" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="ft_titulo" value="titulo : varchar(255) NOT NULL" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="ft_title">
+      <mxGeometry y="100" width="270" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="ft_desc" value="descripcion : text NOT NULL" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="ft_title">
+      <mxGeometry y="130" width="270" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="ft_fecha" value="fecha : timestamp NOT NULL" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="ft_title">
+      <mxGeometry y="160" width="270" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="ft_audit" value="created_at / updated_at / deleted_at" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=#f5f5f5;fontColor=#666;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;top=0;left=0;right=0;bottom=0;" vertex="1" parent="ft_title">
+      <mxGeometry y="190" width="270" height="30" as="geometry" />
+    </mxCell>
+
+    <!-- ===== TEXTO_APLICACION ===== -->
+    <mxCell id="ta_title" value="texto_aplicacion" style="shape=table;startSize=30;container=1;collapsible=1;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=1;fontSize=14;" vertex="1" parent="1">
+      <mxGeometry x="1100" y="1270" width="280" height="190" as="geometry" />
+    </mxCell>
+    <mxCell id="ta_h" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=1;" vertex="1" parent="ta_title">
+      <mxGeometry y="30" width="280" height="10" as="geometry" />
+    </mxCell>
+    <mxCell id="ta_id" value="PK id : serial" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="ta_title">
+      <mxGeometry y="40" width="280" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="ta_codigo" value="codigo : varchar(255) UNIQUE NOT NULL" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="ta_title">
+      <mxGeometry y="70" width="280" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="ta_titulo" value="titulo : varchar(255) NOT NULL" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="ta_title">
+      <mxGeometry y="100" width="280" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="ta_texto" value="texto : text NOT NULL" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;top=0;left=0;right=0;bottom=0;" vertex="1" parent="ta_title">
+      <mxGeometry y="130" width="280" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="ta_audit" value="created_at / updated_at / deleted_at" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=#f5f5f5;fontColor=#666;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;top=0;left=0;right=0;bottom=0;" vertex="1" parent="ta_title">
+      <mxGeometry y="160" width="280" height="30" as="geometry" />
+    </mxCell>
+
+    <!-- ===== RELACIONES (FOREIGN KEYS) ===== -->
+
+    <!-- roles -> usuarios (1:N) -->
+    <mxCell id="rel_roles_usuarios" value="1:N" style="edgeStyle=entityRelationEdgeStyle;endArrow=ERmanyToOne;startArrow=ERmandOne;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="roles_id" target="usuarios_id_rol">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- usuarios -> evaluaciones (1:N) -->
+    <mxCell id="rel_usu_eval" value="1:N" style="edgeStyle=entityRelationEdgeStyle;endArrow=ERmanyToOne;startArrow=ERmandOne;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="usuarios_id" target="eval_usuario_id">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- evaluaciones -> respuestas (1:N) -->
+    <mxCell id="rel_eval_resp" value="1:N" style="edgeStyle=entityRelationEdgeStyle;endArrow=ERmanyToOne;startArrow=ERmandOne;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="eval_id" target="resp_eval_id">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- preguntas -> respuestas (1:N) -->
+    <mxCell id="rel_preg_resp" value="1:N" style="edgeStyle=entityRelationEdgeStyle;endArrow=ERmanyToOne;startArrow=ERmandOne;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="preg_id" target="resp_preg_id">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- usuarios -> evaluaciones_respuestas_usuarios (1:N) -->
+    <mxCell id="rel_usu_eru" value="1:N" style="edgeStyle=entityRelationEdgeStyle;endArrow=ERmanyToOne;startArrow=ERmandOne;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="usuarios_id" target="eru_usuario_id">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- evaluaciones -> evaluaciones_respuestas_usuarios (1:N) -->
+    <mxCell id="rel_eval_eru" value="1:N" style="edgeStyle=entityRelationEdgeStyle;endArrow=ERmanyToOne;startArrow=ERmandOne;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="eval_id" target="eru_eval_id">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- usuarios -> encuestas_respuestas (1:N) -->
+    <mxCell id="rel_usu_encresp" value="1:N" style="edgeStyle=entityRelationEdgeStyle;endArrow=ERmanyToOne;startArrow=ERmandOne;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="usuarios_id" target="encresp_usu">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- encuestas -> encuestas_respuestas (1:N) -->
+    <mxCell id="rel_enc_encresp" value="1:N" style="edgeStyle=entityRelationEdgeStyle;endArrow=ERmanyToOne;startArrow=ERmandOne;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="enc_id" target="encresp_enc">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- usuarios -> registro_emocional (1:N) -->
+    <mxCell id="rel_usu_re" value="1:N" style="edgeStyle=entityRelationEdgeStyle;endArrow=ERmanyToOne;startArrow=ERmandOne;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="usuarios_id" target="re_usuario_id">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- opciones_registro_emocional -> registro_emocional (1:N) -->
+    <mxCell id="rel_ore_re" value="1:N" style="edgeStyle=entityRelationEdgeStyle;endArrow=ERmanyToOne;startArrow=ERmandOne;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="ore_id" target="re_opcion_id">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- usuarios -> registro_actividades_usuarios (1:N) -->
+    <mxCell id="rel_usu_rau" value="1:N" style="edgeStyle=entityRelationEdgeStyle;endArrow=ERmanyToOne;startArrow=ERmandOne;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="usuarios_id" target="rau_usu">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- opciones_registro_actividades -> registro_actividades_usuarios (1:N) -->
+    <mxCell id="rel_ora_rau" value="1:N" style="edgeStyle=entityRelationEdgeStyle;endArrow=ERmanyToOne;startArrow=ERmandOne;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="ora_id" target="rau_opc">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- usuarios -> chats (1:N como estudiante) -->
+    <mxCell id="rel_usu_chats_est" value="estudiante" style="edgeStyle=entityRelationEdgeStyle;endArrow=ERmanyToOne;startArrow=ERmandOne;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="usuarios_id" target="chats_est">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- usuarios -> chats (1:N como psicologo) -->
+    <mxCell id="rel_usu_chats_psic" value="psicologo" style="edgeStyle=entityRelationEdgeStyle;endArrow=ERmanyToOne;startArrow=ERmandOne;exitX=1;exitY=0.7;exitDx=0;exitDy=0;entryX=0;entryY=0.7;entryDx=0;entryDy=0;" edge="1" parent="1" source="usuarios_id" target="chats_psic">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- chats -> mensajes_chat (1:N) -->
+    <mxCell id="rel_chats_mc" value="1:N" style="edgeStyle=entityRelationEdgeStyle;endArrow=ERmanyToOne;startArrow=ERmandOne;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="chats_id" target="mc_chat_id">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- usuarios -> mensajes_chat (1:N) -->
+    <mxCell id="rel_usu_mc" value="1:N" style="edgeStyle=entityRelationEdgeStyle;endArrow=ERmanyToOne;startArrow=ERmandOne;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="usuarios_id" target="mc_usu_id">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- usuarios -> diario (1:N) -->
+    <mxCell id="rel_usu_dia" value="1:N" style="edgeStyle=entityRelationEdgeStyle;endArrow=ERmanyToOne;startArrow=ERmandOne;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="usuarios_id" target="dia_usu">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- usuarios -> feedback (1:N) -->
+    <mxCell id="rel_usu_fb" value="1:N" style="edgeStyle=entityRelationEdgeStyle;endArrow=ERmanyToOne;startArrow=ERmandOne;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="usuarios_id" target="fb_usu">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- usuarios -> fallas_tecnicas (1:N) -->
+    <mxCell id="rel_usu_ft" value="1:N" style="edgeStyle=entityRelationEdgeStyle;endArrow=ERmanyToOne;startArrow=ERmandOne;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="usuarios_id" target="ft_usu">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+  </root>
+</mxGraphModel>

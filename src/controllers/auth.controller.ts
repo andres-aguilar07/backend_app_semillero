@@ -8,9 +8,9 @@ import { usuarios } from '../db/schema';
 
 // Validation schemas
 export const registerSchema = z.object({
+  nombres: z.string().min(2, 'Nombre demasiado corto'),
   correo: z.string().email('Correo inválido'),
   contrasena: z.string().min(8, 'La contraseña debe tener al menos 8 caracteres'),
-  nombres: z.string().min(2, 'Nombre demasiado corto'),
   apellidos: z.string().min(2, 'Apellido demasiado corto'),
   telefono: z.string().min(7, 'Teléfono inválido'),
   ciudad: z.string().min(2, 'Ciudad demasiado corta'),
