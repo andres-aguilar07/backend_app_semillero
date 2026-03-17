@@ -1,5 +1,9 @@
+// Libs
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+
+// Types
+import { RoleNombre } from '../shared/types/roles.types';
 
 dotenv.config();
 
@@ -9,7 +13,7 @@ const JWT_EXPIRE = '24h';
 export interface JwtPayload {
   id: number;
   correo: string;
-  role: 'usuario' | 'psicologo' | 'admin';
+  role: RoleNombre;
 }
 
 export const generateToken = (payload: JwtPayload): string => {

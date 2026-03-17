@@ -5,6 +5,8 @@ import { z } from 'zod';
 import { eq } from 'drizzle-orm';
 import { db } from '../db';
 import { usuarios } from '../db/schema';
+import { ROLES } from '../shared/const/roles.const';
+import { RoleNombre } from '../shared/types/roles.types';
 
 // Validation schemas
 export const registerSchema = z.object({
@@ -65,7 +67,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
         telefono: userData.telefono,
         edad: userData.edad,
         sexo: userData.sexo,
-        id_rol: 1
+        id_rol: ROLES.USUARIO.id
       })
       .returning({
         id: usuarios.id,
@@ -78,7 +80,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
     const token = generateToken({
       id: newUser.id,
       correo: newUser.correo,
-      role: 'usuario'
+      role: ROLES.USUARIO.nombre // Cuando se quiera usar un rol por favor usar el objeto ROLES para mantener consistencia
     });
 
     // Return user data and token
@@ -130,21 +132,24 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    let rol: 'admin' | 'psicologo' | 'usuario';
+    let rol: RoleNombre;
 
     switch (user.id_rol) {
-
-      case 1: rol = "admin";
+      case 1: rol = ROLES.ADMIN.nombre;
         break;
 
-      case 2: rol = "psicologo";
+      case 2: rol = ROLES.PSICOLOGO.nombre;
         break;
 
-      default: rol = "usuario";
+      default: rol = ROLES.USUARIO.nombre;
     }
 
     // Generate token
-    const token = generateToken({ id: user.id, correo: user.correo, role: rol });
+    const token = generateToken({ 
+      id: user.id, 
+      correo: user.correo, 
+      role: rol 
+    });
 
     // Return user data and token
     res.json({

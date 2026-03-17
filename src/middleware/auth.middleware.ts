@@ -1,5 +1,11 @@
+// Libs
 import { Request, Response, NextFunction } from 'express';
+
+// Config
 import { verifyToken, JwtPayload } from '../config/jwt';
+
+// Constants
+import { ROLES } from '../shared/const/roles.const';
 
 export interface AuthRequest extends Request {
   user?: JwtPayload;
@@ -30,7 +36,7 @@ export const authenticate = (req: AuthRequest, res: Response, next: NextFunction
 };
 
 export const isUsuario = (req: AuthRequest, res: Response, next: NextFunction): void => {
-  if (req.user?.role !== 'usuario') {
+  if (req.user?.role !== ROLES.USUARIO.nombre) {
     res.status(403).json({ message: 'Access forbidden: User role required' });
     return;
   }
@@ -39,7 +45,7 @@ export const isUsuario = (req: AuthRequest, res: Response, next: NextFunction): 
 };
 
 export const isPsicologo = (req: AuthRequest, res: Response, next: NextFunction): void => {
-  if (req.user?.role !== 'psicologo') {
+  if (req.user?.role !== ROLES.PSICOLOGO.nombre) {
     res.status(403).json({ message: 'Access forbidden: Psychologist role required' });
     return;
   }
@@ -48,7 +54,7 @@ export const isPsicologo = (req: AuthRequest, res: Response, next: NextFunction)
 }; 
 
 export const isAdmin = (req: AuthRequest, res: Response, next: NextFunction): void => {
-  if (req.user?.role !== 'admin') {
+  if (req.user?.role !== ROLES.ADMIN.nombre) {
     res.status(403).json({ message: 'Access forbidden: Admin role required' });
     return;
   }
